@@ -7,7 +7,7 @@ function App() {
     <div className="min-h-screen bg-black p-2">
       <Sidebar />
       <main className="ml-[300px]">
-        <Routes>
+        <Routes> 
           <Route path="/" element={<Home />} />
         </Routes>
       </main>

@@ -1,16 +1,16 @@
-import Sidebar from './components/sidebar';
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/home';
+import Sidebar from "./components/sidebar";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/home";
 
 function App() {
   return (
-    <div className="w-screen h-screen bg-black p-2">
+    <div className="w-screen h-screen bg-black p-2 flex">
       <Sidebar />
-      <Routes>
+        <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
-    </div>
-  )
+      </div>
+  );
 }
 
-export default App
+export default App;

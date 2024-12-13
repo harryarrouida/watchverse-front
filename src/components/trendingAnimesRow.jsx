@@ -59,13 +59,15 @@ const TrendingAnimesRow = () => {
   });
 
   return (
-    <div className="overflow-hidden w-full h-[500px] relative bg-transparent p-4 relative bottom-20">
+    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mb-10">
       <div className="text-white text-2xl font-bold mb-6 ml-8">
         Trending Anime
       </div>
-      <div className="group relative"
-           onMouseEnter={() => setIsAnimating(false)}
-           onMouseLeave={() => setIsAnimating(true)}>
+      <div
+        className="group relative"
+        onMouseEnter={() => setIsAnimating(false)}
+        onMouseLeave={() => setIsAnimating(true)}
+      >
         <div
           {...handlers}
           ref={rowRef}
@@ -79,7 +81,9 @@ const TrendingAnimesRow = () => {
             >
               <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
                 <span className="text-yellow-400">★</span>
-                <span className="text-white text-sm">{anime.vote_average.toFixed(1)}</span>
+                <span className="text-white text-sm">
+                  {anime.vote_average.toFixed(1)}
+                </span>
               </div>
               <img
                 src={`https://image.tmdb.org/t/p/w500${anime.poster_path}`}

@@ -55,7 +55,7 @@ const TrendingShowsRow = () => {
   });
 
   return (
-    <div className="overflow-hidden w-full h-[500px] relative bg-transparent p-4 relative bottom-20">
+    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mb-10">
       <div className="text-white text-2xl font-bold mb-6 ml-8">
         Trending TV Shows
       </div>

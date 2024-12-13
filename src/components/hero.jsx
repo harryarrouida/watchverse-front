@@ -43,13 +43,13 @@ export default function Hero() {
   if (!movie) return null;
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen rounded-lg">
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 rounded-lg">
         <img
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
           alt={movie.title}
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-40 rounded-lg"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
       </div>

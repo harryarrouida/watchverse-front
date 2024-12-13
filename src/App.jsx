@@ -4,12 +4,14 @@ import Home from "./pages/home";
 
 function App() {
   return (
-    <div className="w-screen h-screen bg-black p-2 flex">
+    <div className="min-h-screen bg-black p-2">
       <Sidebar />
+      <main className="ml-[300px]">
         <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-      </div>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

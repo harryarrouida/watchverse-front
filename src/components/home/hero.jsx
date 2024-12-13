@@ -44,7 +44,11 @@ export default function Hero() {
   }, [allContent.length]); // Only re-run if content array length changes
 
   if (isSearchModalOpen) {
-    return <div className="fixed inset-0 bg-black/50 z-50"><SearchModal /></div>;
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50">
+        <SearchModal onClose={() => setIsSearchModalOpen(false)} />
+      </div>
+    );
   }
 
   if (!content) return null;
@@ -69,7 +73,8 @@ export default function Hero() {
               onClick={() => setIsSearchModalOpen(true)}
               type="text"
               placeholder="Search..."
-              className="w-full bg-gray-700/30 backdrop-blur-sm text-white px-4 py-3 pl-10 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="w-full bg-gray-700/30 backdrop-blur-sm text-white px-4 py-3 pl-10 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer"
+              readOnly
             />
             <AiOutlineSearch
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"

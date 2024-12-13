@@ -16,7 +16,7 @@ import { MdFavorite } from 'react-icons/md';
 
 const Sidebar = () => {
   return (
-    <div className="fixed left-0 h-screen w-[300px] bg-black text-white p-2">
+    <div className="fixed left-0 h-screen w-[300px] bg-black text-white pr-2">
       <nav className="flex flex-col space-y-2">
         {/* Top Section */}
         <div className="space-y-2 bg-[#121212] rounded-lg p-2">

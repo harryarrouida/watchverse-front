@@ -9,13 +9,20 @@ export default function Movies() {
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = async (e) => {
-    setQuery(e.target.value);
+    const searchTerm = e.target.value;
+    setQuery(searchTerm);
+    
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
     try {
-      const response = await movieServices.searchMovies(query);
-      setSearchResults(response.results.slice(0, 4));
-      console.log(response.results.slice(0, 4));
+      const response = await movieServices.searchMovies(searchTerm);
+      setSearchResults(response.results);
     } catch (error) {
       console.error("Error searching movies:", error);
+      setSearchResults([]);
     }
   };
 

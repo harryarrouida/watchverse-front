@@ -8,22 +8,22 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
-  if (data) {
-    setContent(data);
-  } else {
-    useEffect(() => {
+  useEffect(() => {
+    if (data) {
+      setContent(data);
+    } else {
       const fetchContent = async () => {
         try {
-          const data = await fetchItems();
-          setContent(data.results);
+          const response = await fetchItems();
+          setContent(response.results);
         } catch (error) {
           console.error(`Error fetching ${title}:`, error);
         }
       };
 
       fetchContent();
-    }, [fetchItems, title]);
-  }
+    }
+  }, [data, fetchItems, title]);
 
   useEffect(() => {
     let intervalId;

@@ -1,54 +1,54 @@
 import { useState, useEffect } from "react";
 import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
 
-import { movieServices } from "../services/movieServices";
+import { tmdbServices } from "../../services/tmdbServices";
 
 export default function Hero() {
-  const [movie, setMovie] = useState(null);
-  const [movies, setMovies] = useState([]);
+  const [content, setContent] = useState(null);
+  const [allContent, setAllContent] = useState([]);
 
   useEffect(() => {
-    const fetchTrendingMovie = async () => {
+    const fetchTrendingContent = async () => {
       try {
-        const data = await movieServices.getPopularMovies();
-        setMovies(data.results);
-        // Set initial random movie
-        setMovie(data.results[Math.floor(Math.random() * data.results.length)]);
+        const data = await tmdbServices.getTrendingAll();
+        setAllContent(data.results);
+        // Set initial random content
+        setContent(data.results[Math.floor(Math.random() * data.results.length)]);
       } catch (error) {
-        console.error("Error fetching trending movie:", error);
+        console.error("Error fetching trending content:", error);
       }
     };
 
-    fetchTrendingMovie();
+    fetchTrendingContent();
 
-    // Set up interval to change movie every 5 seconds
+    // Set up interval to change content every 10 seconds
     const intervalId = setInterval(() => {
-      setMovie((currentMovie) => {
-        if (!movies.length) return currentMovie;
+      setContent((currentContent) => {
+        if (!allContent.length) return currentContent;
         let randomIndex;
-        let newMovie;
-        // Keep generating random index until we get a different movie
+        let newContent;
+        // Keep generating random index until we get different content
         do {
-          randomIndex = Math.floor(Math.random() * movies.length);
-          newMovie = movies[randomIndex];
-        } while (newMovie?.id === currentMovie?.id && movies.length > 1);
-        return newMovie;
+          randomIndex = Math.floor(Math.random() * allContent.length);
+          newContent = allContent[randomIndex];
+        } while (newContent?.id === currentContent?.id && allContent.length > 1);
+        return newContent;
       });
-    }, 10000); // Changed to 5 seconds for smoother transitions
+    }, 10000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [movies.length]); // Only re-run if movies array length changes
+  }, [allContent.length]); // Only re-run if content array length changes
 
-  if (!movie) return null;
+  if (!content) return null;
 
   return (
     <div className="relative h-screen rounded-lg">
       {/* Background Image */}
       <div className="absolute inset-0 rounded-lg">
         <img
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
+          src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
+          alt={content.title || content.name}
           className="w-full h-full object-cover opacity-40 rounded-lg"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
@@ -60,7 +60,7 @@ export default function Hero() {
           <div className="relative w-full">
             <input
               type="text"
-              placeholder="Search movies..."
+              placeholder="Search..."
               className="w-full bg-gray-700/30 backdrop-blur-sm text-white px-4 py-3 pl-10 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-500"
             />
             <AiOutlineSearch
@@ -79,17 +79,17 @@ export default function Hero() {
       {/* Hero Content */}
       <div className="relative h-[calc(100%-80px)] flex items-center px-12">
         <div className="w-2/3 space-y-6">
-          <h1 className="text-6xl font-bold text-white">{movie.title}</h1>
+          <h1 className="text-6xl font-bold text-white">{content.title || content.name}</h1>
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-xl font-semibold">
-              ★ {movie.vote_average.toFixed(1)}
+              ★ {content.vote_average.toFixed(1)}
             </span>
             <span className="text-gray-300">
-              Release: {movie.release_date}
+              Release: {content.release_date || content.first_air_date}
             </span>
           </div>
           <p className="text-gray-300 text-lg max-w-2xl line-clamp-3">
-            {movie.overview}
+            {content.overview}
           </p>
           <div className="flex gap-4">
             <button className="px-8 py-3 bg-white text-black font-semibold rounded hover:bg-opacity-90 transition">

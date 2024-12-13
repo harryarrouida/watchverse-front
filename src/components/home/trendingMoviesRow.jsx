@@ -1,40 +1,40 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
-import { tvShowServices } from "../services/tvshowServices";
+import { movieServices } from "../../services/movieServices";
 
-const TrendingShowsRow = () => {
+const TrendingMoviesRow = () => {
   const [position, setPosition] = useState(0);
-  const [shows, setShows] = useState([]);
+  const [movies, setMovies] = useState([]);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    const fetchTrendingShows = async () => {
+    const fetchTrendingMovies = async () => {
       try {
-        const data = await tvShowServices.getTrendingTvShows();
-        setShows(data.results);
+        const data = await movieServices.getTrendingMovies();
+        setMovies(data.results);
       } catch (error) {
-        console.error("Error fetching trending shows:", error);
+        console.error("Error fetching trending movies:", error);
       }
     };
 
-    fetchTrendingShows();
+    fetchTrendingMovies();
   }, []);
 
   useEffect(() => {
     let intervalId;
-    
+
     if (isAnimating && rowRef.current) {
       intervalId = setInterval(() => {
         const rowWidth = rowRef.current.scrollWidth;
         const containerWidth = rowRef.current.clientWidth;
         const maxPosition = -(rowWidth - containerWidth);
-        
-        setPosition(prevPosition => {
-          const newPosition = prevPosition - 220;
+
+        setPosition((prevPosition) => {
+          const newPosition = prevPosition - 220; // Move one movie poster width
           return newPosition <= maxPosition ? 0 : newPosition;
         });
-      }, 3000);
+      }, 3000); // Move every 3 seconds
     }
 
     return () => clearInterval(intervalId);
@@ -55,33 +55,47 @@ const TrendingShowsRow = () => {
   });
 
   return (
-    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mb-10">
+    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mt-10 mt-10">
       <div className="text-white text-2xl font-bold mb-6 ml-8">
-        Trending TV Shows
+        Trending Movies
       </div>
-      <div className="group relative"
-           onMouseEnter={() => setIsAnimating(false)}
-           onMouseLeave={() => setIsAnimating(true)}>
+      {/* Movies Container */}
+      <div
+        className="group relative"
+        onMouseEnter={() => setIsAnimating(false)}
+        onMouseLeave={() => setIsAnimating(true)}
+      >
         <div
           {...handlers}
           ref={rowRef}
           className="flex transition-transform duration-1000 ease-in-out"
           style={{ transform: `translateX(${position}px)` }}
         >
-          {shows?.map((show) => (
+          {movies?.map((movie, index) => (
             <div
-              key={show.id}
+              key={movie.id}
               className="min-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300"
             >
               <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
                 <span className="text-yellow-400">★</span>
-                <span className="text-white text-sm">{show.vote_average.toFixed(1)}</span>
+                <span className="text-white text-sm">
+                  {movie.vote_average.toFixed(1)}
+                </span>
               </div>
-              <img
-                src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-                alt={show.name}
-                className="w-full h-[270px] object-cover rounded-lg"
-              />
+              <div className="relative">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="h-[270px] w-full rounded-lg object-cover shadow-lg shadow-black/50"
+                />
+                {index === 0 && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-transparent to-transparent" />
+                )}
+                {index === movies.length - 1 && (
+                  <div className="absolute inset-0 bg-gradient-to-l from-[#121212] via-transparent to-transparent" />
+                )}
+              </div>
+              {/* <h3 className="mt-2 text-sm text-white font-semibold truncate px-1">{movie.title}</h3> */}
             </div>
           ))}
         </div>
@@ -90,4 +104,4 @@ const TrendingShowsRow = () => {
   );
 };
 
-export default TrendingShowsRow;
+export default TrendingMoviesRow;

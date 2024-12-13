@@ -1,6 +1,7 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import { tmdbServices } from "../../services/tmdbServices";
+import LazyImage from "../common/LazyImage";
 
 const AllTrendsRow = () => {
   const [position, setPosition] = useState(0);
@@ -81,10 +82,11 @@ const AllTrendsRow = () => {
                   {item.vote_average.toFixed(1)}
                 </span>
               </div>
-              <img
+              <LazyImage
                 src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                 alt={item.title || item.name}
                 className="w-full h-[270px] object-cover rounded-lg"
+                loading="lazy"
               />
             </div>
           ))}

@@ -1,12 +1,20 @@
 import { TMDB_BASE_URL, API_KEY } from '../config';
+import { cacheManager } from '../../utils/cacheUtils';
 
 export const tvShowServices = {
     getPopularTvShows: async (page = 1) => {
+        const cacheKey = `popular-tv-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) return cachedData;
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/tv/popular?api_key=${API_KEY}&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching popular TV shows:', error);
             throw error;

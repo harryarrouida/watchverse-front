@@ -3,6 +3,7 @@ import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
 
 import { tmdbServices } from "../../services/tmdbServices";
 import SearchModal from "../ui/searchModal";
+import LazyImage from "../common/LazyImage";
 
 export default function Hero() {
   const [content, setContent] = useState(null);
@@ -57,10 +58,11 @@ export default function Hero() {
     <div className="relative h-screen rounded-lg">
       {/* Background Image */}
       <div className="absolute inset-0 rounded-lg">
-        <img
+        <LazyImage
           src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
           alt={content.title || content.name}
           className="w-full h-full object-cover opacity-40 rounded-lg"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
       </div>

@@ -1,6 +1,7 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import { animeServices } from "../../services/specific/animeServices";
+import LazyImage from "../common/LazyImage";
 
 const TrendingAnimesRow = () => {
   const [position, setPosition] = useState(0);
@@ -85,10 +86,11 @@ const TrendingAnimesRow = () => {
                   {anime.vote_average.toFixed(1)}
                 </span>
               </div>
-              <img
+              <LazyImage
                 src={`https://image.tmdb.org/t/p/w500${anime.poster_path}`}
                 alt={anime.title}
                 className="w-full h-[270px] object-cover rounded-lg"
+                loading="lazy"
               />
             </div>
           ))}

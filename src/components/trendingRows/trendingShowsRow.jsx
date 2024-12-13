@@ -1,6 +1,7 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import { tvShowServices } from "../../services/specific/tvshowServices";
+import LazyImage from "../common/LazyImage";
 
 const TrendingShowsRow = () => {
   const [position, setPosition] = useState(0);
@@ -81,10 +82,11 @@ const TrendingShowsRow = () => {
                   {show.vote_average.toFixed(1)}
                 </span>
               </div>
-              <img
+              <LazyImage
                 src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
                 alt={show.name}
                 className="w-full h-[270px] object-cover rounded-lg"
+                loading="lazy"
               />
             </div>
           ))}

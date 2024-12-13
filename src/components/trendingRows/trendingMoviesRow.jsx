@@ -1,6 +1,7 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import { movieServices } from "../../services/specific/movieServices";
+import LazyImage from "../common/LazyImage";
 
 const TrendingMoviesRow = () => {
   const [position, setPosition] = useState(0);
@@ -83,10 +84,11 @@ const TrendingMoviesRow = () => {
                 </span>
               </div>
               <div className="relative">
-                <img
+                <LazyImage
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
                   className="h-[270px] w-full rounded-lg object-cover shadow-lg shadow-black/50"
+                  loading="lazy"
                 />
                 {index === 0 && (
                   <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-transparent to-transparent" />

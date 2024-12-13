@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
-// You'll need to import your icons from a library like react-icons
 import {
   AiFillHome,
   AiOutlineSearch,
   AiOutlineHistory,
-  AiFillHeart,
   AiOutlineSetting,
+  AiOutlineVideoCamera,
 } from "react-icons/ai";
-import { BiTrendingUp, BiStar } from "react-icons/bi";
-import { MdFavorite } from "react-icons/md";
+import { BiMoviePlay } from "react-icons/bi"; 
+import { MdFavorite, MdLocalMovies } from "react-icons/md";
+import { BsBookmarkHeart } from "react-icons/bs";
 
 const Sidebar = () => {
   return (
@@ -33,18 +33,25 @@ const Sidebar = () => {
         {/* Main Navigation */}
         <div className="space-y-2 pb-4 bg-[#121212] rounded-lg p-2">
           <Link
-            to="/trending"
+            to="/movies"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <BiTrendingUp size={24} />
-            <span>Trending</span>
+            <MdLocalMovies size={24} />
+            <span>Movies</span>
           </Link>
           <Link
-            to="/top-rated"
+            to="/shows"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <BiStar size={24} />
-            <span>Top Rated</span>
+            <AiOutlineSearch size={24} />
+            <span>Shows</span>
+          </Link>
+          <Link
+            to="/anime"
+            className="flex items-center space-x-3 p-2 rounded"
+          >
+            <AiOutlineVideoCamera size={24} />
+            <span>Anime</span>
           </Link>
         </div>
 
@@ -55,7 +62,7 @@ const Sidebar = () => {
               to="/watchlist"
               className="flex items-center space-x-3 p-2 rounded"
             >
-              <AiFillHeart size={24} />
+              <BsBookmarkHeart size={24} />
               <span>My Watchlist</span>
             </Link>
             <Link
@@ -79,7 +86,7 @@ const Sidebar = () => {
               to="/watchlist"
               className="flex items-center space-x-3 p-2 rounded"
             >
-              <AiFillHeart size={24} />
+              <BiMoviePlay size={24} />
               <span>WatchList</span>
             </Link>
             <Link

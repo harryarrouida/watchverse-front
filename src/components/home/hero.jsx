@@ -10,6 +10,7 @@ export default function Hero() {
   const [allContent, setAllContent] = useState([]);
 
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const fetchTrendingContent = async () => {
@@ -27,17 +28,19 @@ export default function Hero() {
 
     // Set up interval to change content every 10 seconds
     const intervalId = setInterval(() => {
-      setContent((currentContent) => {
-        if (!allContent.length) return currentContent;
-        let randomIndex;
-        let newContent;
-        // Keep generating random index until we get different content
-        do {
-          randomIndex = Math.floor(Math.random() * allContent.length);
-          newContent = allContent[randomIndex];
-        } while (newContent?.id === currentContent?.id && allContent.length > 1);
-        return newContent;
-      });
+      if(isAnimating){
+        setContent((currentContent) => {
+          if (!allContent.length) return currentContent;
+          let randomIndex;
+          let newContent;
+          // Keep generating random index until we get different content
+          do {
+            randomIndex = Math.floor(Math.random() * allContent.length);
+            newContent = allContent[randomIndex];
+          } while (newContent?.id === currentContent?.id && allContent.length > 1);
+          return newContent;
+        });
+      }
     }, 10000);
 
     // Cleanup interval on component unmount

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { tmdbServices } from "../../services/tmdbServices";
+import Poster from "../common/Poster";
 
 export default function BestByCategory() {
   const [selectedCategory, setSelectedCategory] = useState("movie");
@@ -69,41 +70,42 @@ export default function BestByCategory() {
 
         <div className="grid grid-cols-5 gap-8">
           {content.map((item, index) => (
-            <div
-              key={item.id}
-              className="relative group cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl z-10" />
+            // <div
+            //   key={item.id}
+            //   className="relative group cursor-pointer"
+            // >
+            //   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl z-10" />
               
-              <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
-                <div className="bg-white text-gray-900 font-bold px-3 py-1 rounded-lg shadow-lg">
-                  #{index + 1}
-                </div>
-                <div className="bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
-                  <span className="text-yellow-400">★</span>
-                  <span className="text-white font-medium">{item.vote_average.toFixed(1)}</span>
-                </div>
-              </div>
+            //   <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
+            //     <div className="bg-white text-gray-900 font-bold px-3 py-1 rounded-lg shadow-lg">
+            //       #{index + 1}
+            //     </div>
+            //     <div className="bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+            //       <span className="text-yellow-400">★</span>
+            //       <span className="text-white font-medium">{item.vote_average.toFixed(1)}</span>
+            //     </div>
+            //   </div>
 
-              <div className="relative overflow-hidden rounded-xl aspect-[2/3] group-hover:transform group-hover:scale-[1.02] transition-all duration-300">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                  alt={item.title || item.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            //   <div className="relative overflow-hidden rounded-xl aspect-[2/3] group-hover:transform group-hover:scale-[1.02] transition-all duration-300">
+            //     <img
+            //       src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+            //       alt={item.title || item.name}
+            //       className="w-full h-full object-cover"
+            //     />
+            //   </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
-                <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
-                  {item.title || item.name}
-                </h3>
-                <p className="text-gray-300 font-medium">
-                  {new Date(
-                    item.release_date || item.first_air_date
-                  ).getFullYear()}
-                </p>
-              </div>
-            </div>
+            //   <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
+            //     <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
+            //       {item.title || item.name}
+            //     </h3>
+            //     <p className="text-gray-300 font-medium">
+            //       {new Date(
+            //         item.release_date || item.first_air_date
+            //       ).getFullYear()}
+            //     </p>
+            //   </div>
+            // </div>
+            <Poster item={item} index={index} showRank={true} />
           ))}
         </div>
       </div>

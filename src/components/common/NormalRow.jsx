@@ -1,26 +1,29 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
-import { tmdbServices } from "../../services/tmdbServices";
-import NormalPoster from "../common/NormalPoster";
+import NormalPoster from "./NormalPoster";
 
-const AllTrendsRow = () => {
+const NormalRow = ({ title, fetchItems, data = null }) => {
   const [position, setPosition] = useState(0);
-  const [trends, setTrends] = useState([]);
+  const [content, setContent] = useState([]);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
-  useEffect(() => {
-    const fetchAllTrends = async () => {
-      try {
-        const data = await tmdbServices.getTrendingAll();
-        setTrends(data.results);
-      } catch (error) {
-        console.error("Error fetching all trends:", error);
-      }
-    };
+  if (data) {
+    setContent(data);
+  } else {
+    useEffect(() => {
+      const fetchContent = async () => {
+        try {
+          const data = await fetchItems();
+          setContent(data.results);
+        } catch (error) {
+          console.error(`Error fetching ${title}:`, error);
+        }
+      };
 
-    fetchAllTrends();
-  }, []);
+      fetchContent();
+    }, [fetchItems, title]);
+  }
 
   useEffect(() => {
     let intervalId;
@@ -56,10 +59,8 @@ const AllTrendsRow = () => {
   });
 
   return (
-    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mb-10">
-      <div className="text-white text-2xl font-bold mb-6 ml-8">
-        Trending Today
-      </div>
+    <div className="overflow-hidden w-full h-auto bg-transparent p-4 mt-10">
+      <div className="text-white text-2xl font-bold mb-6 ml-8">{title}</div>
       <div
         className="group relative"
         onMouseEnter={() => setIsAnimating(false)}
@@ -71,8 +72,8 @@ const AllTrendsRow = () => {
           className="flex transition-transform duration-1000 ease-in-out"
           style={{ transform: `translateX(${position}px)` }}
         >
-          {trends?.map((item) => (
-            <NormalPoster show={item} />
+          {content?.map((item) => (
+            <NormalPoster key={item.id} show={item} />
           ))}
         </div>
       </div>
@@ -80,4 +81,4 @@ const AllTrendsRow = () => {
   );
 };
 
-export default AllTrendsRow;
+export default NormalRow;

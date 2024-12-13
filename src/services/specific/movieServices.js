@@ -12,9 +12,7 @@ export const movieServices = {
             throw error;
         }
     },
-
-
-    // test
+    
     getTrendingMovies: async (page = 1) => {
         try {
             const response = await fetch(

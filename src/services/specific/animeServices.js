@@ -38,14 +38,32 @@ export const animeServices = {
         }
     },
 
-    searchAnime: async (query, page = 1) => {
+    searchAnimes: async (query, page = 1) => {
         try {
-            const response = await fetch(
-                `${TMDB_BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(
+            // Search both movies and TV shows
+            const movieResponse = await fetch(
+                `${TMDB_BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
                     query
                 )}&with_keywords=210024&page=${page}`
             );
-            return await response.json();
+            const tvResponse = await fetch(
+                `${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(
+                    query
+                )}&with_keywords=210024&page=${page}`
+            );
+
+            const movieResults = await movieResponse.json();
+            const tvResults = await tvResponse.json();
+
+            // Combine and sort results by popularity
+            const combinedResults = [...movieResults.results, ...tvResults.results]
+                .sort((a, b) => b.popularity - a.popularity);
+
+            return {
+                results: combinedResults,
+                total_pages: Math.max(movieResults.total_pages, tvResults.total_pages),
+                total_results: movieResults.total_results + tvResults.total_results
+            };
         } catch (error) {
             console.error('Error searching anime:', error);
             throw error;

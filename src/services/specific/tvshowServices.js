@@ -1,4 +1,4 @@
-import { TMDB_BASE_URL, API_KEY } from './config';
+import { TMDB_BASE_URL, API_KEY } from '../config';
 
 export const tvShowServices = {
     getPopularTvShows: async (page = 1) => {

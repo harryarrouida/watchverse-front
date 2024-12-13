@@ -1,11 +1,11 @@
 // import Navbar from "../components/navbar";
 import Hero from "../components/home/hero";
-import TrendingMoviesRow from "../components/home/trendingMoviesRow";
-import TrendingShowsRow from "../components/home/trendingShowsRow";
-import TrendingAnimesRow from "../components/home/trendingAnimesRow";
+import TrendingMoviesRow from "../components/trendingRows/trendingMoviesRow";
+import TrendingShowsRow from "../components/trendingRows/trendingShowsRow";
+import TrendingAnimesRow from "../components/trendingRows/trendingAnimesRow";
 // import AllTrendsRow from "../components/home/allTrendsRow";
-import BestByCategory from "../components/home/bestByCategory";
-import TopFromWatchlist from "../components/home/topFromWatchlist";
+import BestByCategory from "../components/topRows/bestByCategory";
+import TopFromWatchlist from "../components/topRows/topFromWatchlist";
 
 export default function home() {
   return (

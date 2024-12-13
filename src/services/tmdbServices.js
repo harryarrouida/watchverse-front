@@ -2,6 +2,7 @@ const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 export const tmdbServices = {
+    // trending
     getTrendingAll: async (page = 1) => {
         try {
             const response = await fetch(
@@ -21,6 +22,17 @@ export const tmdbServices = {
             return await response.json();
         } catch (error) {
             console.error('Error fetching best by category:', error);
+            throw error;
+        }
+    }, 
+
+    // search 
+    searchContent: async (query, page = 1) => {
+        try {
+            const response = await fetch(`${TMDB_BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&page=${page}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error searching content:', error);
             throw error;
         }
     }

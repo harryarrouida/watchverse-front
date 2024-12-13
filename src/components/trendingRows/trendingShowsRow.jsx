@@ -1,6 +1,6 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
-import { tvShowServices } from "../../services/tvshowServices";
+import { tvShowServices } from "../../services/specific/tvshowServices";
 
 const TrendingShowsRow = () => {
   const [position, setPosition] = useState(0);

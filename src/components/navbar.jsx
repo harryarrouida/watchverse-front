@@ -1,8 +1,8 @@
-import { AiOutlineSearch, AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 right-0 w-[calc(100%-300px)] h-16 bg-transparent flex items-center justify-between px-6 mt-4">
+    <nav className="flex items-center justify-between px-6 py-4 w-full">
       <div className="flex items-center w-1/3">
         <div className="relative w-full">
           <input
@@ -17,7 +17,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center">
-        <button className="text-white hover:text-gray-300">
+        <button className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
           <AiOutlineUser size={24} />
         </button>
       </div>

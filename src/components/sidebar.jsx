@@ -1,29 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 // You'll need to import your icons from a library like react-icons
-import { 
+import {
   AiFillHome,
   AiOutlineSearch,
   AiOutlineHistory,
   AiFillHeart,
-  AiOutlineSetting
-} from 'react-icons/ai';
-import { 
-  BiTrendingUp,
-  BiStar
-} from 'react-icons/bi';
-import { MdFavorite } from 'react-icons/md';
+  AiOutlineSetting,
+} from "react-icons/ai";
+import { BiTrendingUp, BiStar } from "react-icons/bi";
+import { MdFavorite } from "react-icons/md";
 
 const Sidebar = () => {
   return (
-    <div className="fixed left-0 h-screen w-[300px] bg-black text-white pr-2">
+    <aside className="fixed left-0 top-0 h-screen w-[300px] bg-black text-white p-2">
       <nav className="flex flex-col space-y-2">
         {/* Top Section */}
         <div className="space-y-2 bg-[#121212] rounded-lg p-2">
-          <Link
-            to="/"
-            className="flex items-center space-x-3 p-2 rounded"
-          >
+          <Link to="/" className="flex items-center space-x-3 p-2 rounded">
             <AiFillHome size={24} />
             <span>Home</span>
           </Link>
@@ -98,7 +92,7 @@ const Sidebar = () => {
           </div>
         </div>
       </nav>
-    </div>
+    </aside>
   );
 };
 

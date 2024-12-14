@@ -11,15 +11,6 @@ const Favorites = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleRemoveFavorite = async (id) => {
-    try {
-      await removeFavorite(id);
-      setFavorites(favorites.filter((fav) => fav.id !== id));
-    } catch (err) {
-      setError("Failed to remove favorite", err);
-    }
-  };
-
   if (!localStorage.getItem("token")) {
     return <Navigate to="/home" />;
   }
@@ -56,15 +47,15 @@ const Favorites = () => {
   }
 
   return (
-    <div className="min-h-screen text-white p-8">
-      <div className="flex items-center gap-4 mb-8">
-        {/* <MdFavorite size={32} className="text-red-500" /> */}
-        <h1 className="text-3xl font-bold">
+    <div className="h-screen text-white">
+      <div className="text-start">
+        <h1 className="text-4xl font-bold z-20 text-white mt-10 ml-10">
           Track all of your shows and movies
         </h1>
       </div>
 
       <NormalRow title="favorites" data={favorites} />
+
     </div>
   );
 };

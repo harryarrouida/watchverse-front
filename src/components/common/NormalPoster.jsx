@@ -1,10 +1,11 @@
 import { useState } from "react";
 import LazyImage from "./LazyImage";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
 import { toggleFavorite } from "../../utils/favoriteUtils";
 
 export default function NormalPoster({ show}) {
   const [isFavorite, setIsFavorite] = useState(show.is_favorite ? true : false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleFavoriteClick = async (e) => {
     e.stopPropagation();
@@ -23,22 +24,53 @@ export default function NormalPoster({ show}) {
           {show.vote_average}
         </span>
       </div>
-      <button
-        onClick={handleFavoriteClick}
-        className="absolute bottom-2 left-2 text-white hover:text-red-500 transition-colors duration-200 z-20"
+
+      <div 
+        className="absolute top-3 right-3 z-20"
+        onMouseEnter={() => setShowPopup(true)}
+        onMouseLeave={() => setShowPopup(false)}
       >
-        {isFavorite ? (
-          <MdFavorite size={24} className="text-red-500" />
-        ) : (
-          <MdFavoriteBorder size={24} />
+        <button className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80">
+          <MdAdd className="text-white" size={20} />
+        </button>
+        
+        {showPopup && (
+          <div className="absolute right-0 mt-2 w-32 bg-black/90 backdrop-blur-sm rounded-md shadow-lg overflow-hidden">
+            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+              Watching
+            </button>
+            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+              Watched
+            </button>
+            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+              To Watch
+            </button>
+          </div>
         )}
-      </button>
+      </div>
+
       <LazyImage
         src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
         alt={show.name}
         className="w-full h-[270px] object-cover rounded-lg"
         loading="lazy"
       />
+
+      <div className="flex items-center justify-between mt-2 px-2">
+        <div className="text-white text-sm font-bold">
+          {show.title || show.name}
+        </div>
+        <button
+          onClick={handleFavoriteClick}
+          className="text-white hover:text-red-500 transition-colors duration-200"
+        >
+          {isFavorite ? (
+            <MdFavorite size={20} className="text-red-500" />
+          ) : (
+            <MdFavoriteBorder size={20} />
+          )}
+        </button>
+      </div>
     </div>
   );
 }

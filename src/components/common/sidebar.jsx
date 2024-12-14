@@ -22,11 +22,11 @@ const Sidebar = () => {
             <span>Home</span>
           </Link>
           <Link
-            to="/search"
+            to="/profile"
             className="flex items-center space-x-3 p-2 rounded"
           >
             <AiOutlineSearch size={24} />
-            <span>Search</span>
+            <span>Profile</span>
           </Link>
         </div>
 
@@ -59,11 +59,11 @@ const Sidebar = () => {
         <div className="flex flex-col justify-between h-full bg-[#121212] rounded-lg p-2 gap-y-56">
           <div className="space-y-2">
             <Link
-              to="/watchlist"
+              to="/favorites"
               className="flex items-center space-x-3 p-2 rounded"
             >
               <BsBookmarkHeart size={24} />
-              <span>My Watchlist</span>
+              <span>My Favorites</span>
             </Link>
             <Link
               to="/favorites"

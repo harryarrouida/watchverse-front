@@ -17,10 +17,11 @@ export default function AuthModal({ onClose }) {
         console.log(username, password);
         const response = await login(username, password);
         console.log(response);
-        if (response.success) {
+        if (response) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
           onClose();
+          console.log("logged in");
         }
       } catch (error) {
         console.error("Error logging in:", error);
@@ -30,7 +31,7 @@ export default function AuthModal({ onClose }) {
         console.log(username, email, password);
         const response = await register(username, email, password);
         console.log(response);
-        if (response.success) {
+        if (response) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
           onClose();

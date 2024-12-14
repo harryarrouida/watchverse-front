@@ -1,5 +1,7 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
+import { MdFavorite } from "react-icons/md";
+import { addFavorite } from "../../services/tracker/favoritesServices";
 import NormalPoster from "./NormalPoster";
 
 const NormalRow = ({ title, fetchItems, data = null }) => {
@@ -58,6 +60,21 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
     trackMouse: true,
   });
 
+  const handleAddFavorite = async (item) => {
+    try {
+      const favorite = {
+        title: item.title || item.name,
+        type: "tv",
+        posterPath: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+        tmdbId: item.id
+      };
+      await addFavorite(favorite);
+      console.log("Added to favorites:", favorite);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+    }
+  };
+
   return (
     <div className="overflow-hidden w-full h-auto bg-transparent p-4 mt-10">
       <div className="text-white text-2xl font-bold mb-6 ml-8">{title}</div>
@@ -73,7 +90,15 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
           style={{ transform: `translateX(${position}px)` }}
         >
           {content?.map((item) => (
-            <NormalPoster key={item.id} show={item} />
+            <div key={item.id} className="relative">
+              <NormalPoster show={item} />
+              <button
+                onClick={() => handleAddFavorite(item)}
+                className="absolute bottom-2 left-2 text-white hover:text-red-500 transition-colors duration-200"
+              >
+                <MdFavorite size={24} />
+              </button>
+            </div>
           ))}
         </div>
       </div>

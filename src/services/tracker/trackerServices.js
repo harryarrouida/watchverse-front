@@ -69,13 +69,14 @@ export const getByStatus = async (status) => {
     }
 }
 
-export const updateStatus = async ({id, status}) => {
+export const updateStatus = async ({id, newStatus}) => {
     if (!localStorage.getItem("token")) {
         return [];
     }
     try {
+        console.log("id, newStatus from service", id, newStatus);
         const response = await axios.put(`${API_URL}/track/status/${id}`, {
-            status
+            status: newStatus
         }, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,

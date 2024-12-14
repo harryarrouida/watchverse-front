@@ -3,8 +3,8 @@ import {
   getFavorites,
   removeFavorite,
 } from "../../services/tracker/trackerServices";
-import { MdFavorite } from "react-icons/md";
 import NormalRow from "../../components/common/NormalRow";
+import { getByStatus } from "../../services/tracker/trackerServices";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -47,14 +47,19 @@ const Favorites = () => {
   }
 
   return (
-    <div className="h-screen text-white">
+    <div className="h-auto text-white bg-gradient-to-b from-[#121212] to-black rounded-lg pt-10">
       <div className="text-start">
-        <h1 className="text-4xl font-bold z-20 text-white mt-10 ml-10">
+        <h1 className="text-4xl font-bold z-20 text-white ml-10">
           Track all of your shows and movies
         </h1>
       </div>
 
-      <NormalRow title="favorites" data={favorites} />
+      <div className="space-y-4">
+        <NormalRow title="favorites" data={favorites} />
+        <NormalRow title="watching" fetchItems={getByStatus} status="watching"/>
+        <NormalRow title="watched" fetchItems={getByStatus} status="watched"/>
+        <NormalRow title="to watch" fetchItems={getByStatus} status="to watch"/>
+      </div>
 
     </div>
   );

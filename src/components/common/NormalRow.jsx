@@ -1,31 +1,33 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import NormalPoster from "./NormalPoster";
+import { getByStatus } from "../../services/tracker/trackerServices";
 
-const NormalRow = ({ title, fetchItems, data = null }) => {
+const NormalRow = ({ title, fetchItems, data = null, status = null }) => {
   const [position, setPosition] = useState(0);
   const [content, setContent] = useState([]);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    if (data) {
-      console.log('Data received:', data);
-      setContent(data);
-    } else {
-      const fetchContent = async () => {
-        try {
+    const fetchContent = async () => {
+      try {
+        if (data) {
+          setContent(data);
+        } else if (status) {
+          const response = await getByStatus(status);
+          setContent(response);
+        } else if (fetchItems) {
           const response = await fetchItems();
-          console.log('Fetched results:', response.results);
           setContent(response.results);
-        } catch (error) {
-          console.error(`Error fetching ${title}:`, error);
         }
-      };
+      } catch (error) {
+        console.error(`Error fetching content:`, error);
+      }
+    };
 
-      fetchContent();
-    }
-  }, [data, fetchItems, title]);
+    fetchContent();
+  }, [data, fetchItems, status]);
 
   useEffect(() => {
     let intervalId;
@@ -76,7 +78,7 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
         >
           {content?.map((item) => (
             item && (
-              <div key={item.id}>
+              <div key={item._id}>
                 <NormalPoster show={item}/>
               </div>
             )

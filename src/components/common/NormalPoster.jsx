@@ -2,6 +2,7 @@ import { useState } from "react";
 import LazyImage from "./LazyImage";
 import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
 import { toggleFavorite } from "../../utils/favoriteUtils";
+import { updateStatus } from "../../services/tracker/trackerServices";
 
 export default function NormalPoster({ show}) {
   const [isFavorite, setIsFavorite] = useState(show.is_favorite ? true : false);
@@ -11,6 +12,13 @@ export default function NormalPoster({ show}) {
     e.stopPropagation();
     const newFavoriteStatus = await toggleFavorite(show, isFavorite);
     setIsFavorite(newFavoriteStatus);
+  };
+
+  const handleStatusClick = async (id, newStatus) => {
+    console.log(id, newStatus);
+    const response = await updateStatus({id, newStatus});
+    console.log(response);
+    setShowPopup(false);
   };
 
   return (
@@ -44,18 +52,21 @@ export default function NormalPoster({ show}) {
             <button 
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()} // Prevent onBlur from firing before click
+              onClick={(e) => handleStatusClick(show._id, "watching")}
             >
               Watching
             </button>
             <button 
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => handleStatusClick(show._id, "watched")}
             >
               Watched
             </button>
             <button 
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => handleStatusClick(show._id, "to watch")}
             >
               To Watch
             </button>

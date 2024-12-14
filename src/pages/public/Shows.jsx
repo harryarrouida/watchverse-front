@@ -27,9 +27,9 @@ export default function Shows() {
   };
 
   return (
-    <div className="flex flex-col h-auto">
+    <div className="flex flex-col h-auto bg-gradient-to-b from-[#121212] to-black rounded-lg pt-10">
       <div className="text-start">
-        <h1 className="text-4xl font-bold z-20 text-white mt-10 ml-10">
+        <h1 className="text-4xl font-bold z-20 text-white ml-10">
           Explore TV Shows
         </h1>
       </div>

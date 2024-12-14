@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
   getFavorites,
   removeFavorite,
-} from "../../services/tracker/favoritesServices";
+} from "../../services/tracker/trackerServices";
 import { MdFavorite } from "react-icons/md";
 import NormalRow from "../../components/common/NormalRow";
 

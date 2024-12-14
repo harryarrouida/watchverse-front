@@ -6,7 +6,7 @@ export const getFavorites = async () => {
         return [];
     }
     try {
-        const response = await axios.get(`${API_URL}/favorites`, {
+        const response = await axios.get(`${API_URL}/track/favorites`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -23,7 +23,7 @@ export const addFavorite = async (favorite) => {
         return [];
     }
     try {
-        const response = await axios.post(`${API_URL}/favorites`, favorite, {
+        const response = await axios.post(`${API_URL}/track/favorites`, favorite, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -40,7 +40,7 @@ export const removeFavorite = async (favoriteId) => {
         return [];
     }
     try {
-        const response = await axios.delete(`${API_URL}/favorites/${favoriteId}`, {
+        const response = await axios.delete(`${API_URL}/track/favorites/${favoriteId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -52,4 +52,39 @@ export const removeFavorite = async (favoriteId) => {
     }
 }
 
+export const getByStatus = async (status) => {
+    if (!localStorage.getItem("token")) {
+        return [];
+    }
+    try {
+        const response = await axios.get(`${API_URL}/track/status/${status}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting favorites by status:", error);
+        throw error;
+    }
+}
+
+export const updateStatus = async ({id, status}) => {
+    if (!localStorage.getItem("token")) {
+        return [];
+    }
+    try {
+        const response = await axios.put(`${API_URL}/track/status/${id}`, {
+            status
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating status:", error);
+        throw error;
+    }
+}
 

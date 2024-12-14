@@ -1,4 +1,4 @@
-import { addFavorite as addFavoriteService, removeFavorite as removeFavoriteService } from '../services/tracker/favoritesServices';
+import { addFavorite as addFavoriteService, removeFavorite as removeFavoriteService } from '../services/tracker/trackerServices';
 
 export const toggleFavorite = async (item, isFavorite) => {
   try {

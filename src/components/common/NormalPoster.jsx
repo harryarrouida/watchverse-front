@@ -27,22 +27,36 @@ export default function NormalPoster({ show}) {
 
       <div 
         className="absolute top-3 right-3 z-20"
-        onMouseEnter={() => setShowPopup(true)}
-        onMouseLeave={() => setShowPopup(false)}
       >
-        <button className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80">
+        <button 
+          className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80"
+          onClick={() => setShowPopup(!showPopup)}
+          onBlur={() => {
+            // Add a small delay before hiding to allow clicking popup items
+            setTimeout(() => setShowPopup(false), 200);
+          }}
+        >
           <MdAdd className="text-white" size={20} />
         </button>
         
         {showPopup && (
           <div className="absolute right-0 mt-2 w-32 bg-black/90 backdrop-blur-sm rounded-md shadow-lg overflow-hidden">
-            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+            <button 
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
+              onMouseDown={(e) => e.preventDefault()} // Prevent onBlur from firing before click
+            >
               Watching
             </button>
-            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+            <button 
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
+              onMouseDown={(e) => e.preventDefault()}
+            >
               Watched
             </button>
-            <button className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left">
+            <button 
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
+              onMouseDown={(e) => e.preventDefault()}
+            >
               To Watch
             </button>
           </div>
@@ -57,7 +71,7 @@ export default function NormalPoster({ show}) {
       />
 
       <div className="flex items-center justify-between mt-2 px-2">
-        <div className="text-white text-sm font-bold">
+        <div className="text-white text-sm font-bold overflow-hidden line-clamp-1">
           {show.title || show.name}
         </div>
         <button

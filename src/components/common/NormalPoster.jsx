@@ -3,8 +3,9 @@ import LazyImage from "./LazyImage";
 import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
 import { toggleFavorite } from "../../utils/favoriteUtils";
 import { updateStatus } from "../../services/tracker/trackerServices";
+import { addWithCustomStatus } from "../../services/tracker/trackerServices";
 
-export default function NormalPoster({ show}) {
+export default function NormalPoster({ show }) {
   const [isFavorite, setIsFavorite] = useState(show.is_favorite ? true : false);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -15,9 +16,17 @@ export default function NormalPoster({ show}) {
   };
 
   const handleStatusClick = async (id, newStatus) => {
-    console.log(id, newStatus);
-    const response = await updateStatus({id, newStatus});
-    console.log(response);
+    console.log("show", show);
+    if (show.status) {
+      const response = await updateStatus(id, newStatus);
+      console.log(response);
+    } else {
+      const response = await addWithCustomStatus(show, newStatus);
+
+      console.log("response", response);
+      console.log("show", show);
+      console.log("data", show.title, show.poster_path, show.vote_average, show.tmdbId, newStatus, show.type);
+    }
     setShowPopup(false);
   };
 
@@ -28,15 +37,11 @@ export default function NormalPoster({ show}) {
     >
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
         <span className="text-yellow-400">★</span>
-        <span className="text-white text-sm">
-          {show.vote_average}
-        </span>
+        <span className="text-white text-sm">{show.vote_average}</span>
       </div>
 
-      <div 
-        className="absolute top-3 right-3 z-20"
-      >
-        <button 
+      <div className="absolute top-3 right-3 z-20">
+        <button
           className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80"
           onClick={() => setShowPopup(!showPopup)}
           onBlur={() => {
@@ -46,24 +51,24 @@ export default function NormalPoster({ show}) {
         >
           <MdAdd className="text-white" size={20} />
         </button>
-        
+
         {showPopup && (
           <div className="absolute right-0 mt-2 w-32 bg-black/90 backdrop-blur-sm rounded-md shadow-lg overflow-hidden">
-            <button 
+            <button
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()} // Prevent onBlur from firing before click
               onClick={(e) => handleStatusClick(show._id, "watching")}
             >
               Watching
             </button>
-            <button 
+            <button
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => handleStatusClick(show._id, "watched")}
             >
               Watched
             </button>
-            <button 
+            <button
               className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => handleStatusClick(show._id, "to watch")}
@@ -76,9 +81,11 @@ export default function NormalPoster({ show}) {
 
       <LazyImage
         src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-        alt={show.name}
+        alt={show.name || show.title}
         className="w-full h-[270px] object-cover rounded-lg"
         loading="lazy"
+        show={show}
+
       />
 
       <div className="flex items-center justify-between mt-2 px-2">

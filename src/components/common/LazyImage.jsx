@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const LazyImage = ({ src, alt, className }) => {
+const LazyImage = ({ src, alt, className, show }) => {
     const [imageSrc, setImageSrc] = useState('placeholder.jpg');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -15,6 +15,7 @@ const LazyImage = ({ src, alt, className }) => {
 
     return (
         <img
+            key={show._id}
             src={imageSrc}
             alt={alt}
             className={`${className} ${isLoading ? 'opacity-50' : 'opacity-100'}`}

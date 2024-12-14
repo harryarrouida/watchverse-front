@@ -1,4 +1,4 @@
-import { tvShowServices } from "../../services/specific/tvshowServices";
+import { tvShowServices } from "../../services/content/tvshowServices";
 import NormalRow from "../common/NormalRow";
 
 const TrendingShowsRow = () => {

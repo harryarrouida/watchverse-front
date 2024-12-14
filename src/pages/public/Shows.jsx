@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { tvShowServices } from "../services/specific/tvshowServices";
-import TrendingShowsRow from "../components/trendingRows/trendingShowsRow";
-import NormalRow from "../components/common/NormalRow";
+import { tvShowServices } from "../../services/content/tvshowServices";
+import TrendingShowsRow from "../../components/trendingRows/trendingShowsRow";
+import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Shows() {

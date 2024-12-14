@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
+import AuthModal from "../modals/AuthModal";
 
 import { tmdbServices } from "../../services/tmdbServices";
-import SearchModal from "../ui/searchModal";
+import SearchModal from "../modals/searchModal";
 import LazyImage from "../common/LazyImage";
 
 export default function Hero() {
@@ -11,6 +12,10 @@ export default function Hero() {
 
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     const fetchTrendingContent = async () => {
@@ -55,6 +60,14 @@ export default function Hero() {
     );
   }
 
+  if (isAuthModalOpen) {
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50">
+        <AuthModal onClose={() => setIsAuthModalOpen(false)} />
+      </div>
+    );
+  }
+
   if (!content) return null;
 
   return (
@@ -88,9 +101,15 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex items-center">
-          <button className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
-            <AiOutlineUser size={24} />
-          </button>
+          {token ? (
+            <button className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
+              <AiOutlineUser size={24} />
+            </button>
+          ) : (
+            <button onClick={() => setIsAuthModalOpen(true)} className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
+              <AiOutlineUser size={24} />
+            </button>
+          )}
         </div>
       </nav>
 

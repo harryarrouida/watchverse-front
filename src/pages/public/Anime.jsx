@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { animeServices } from "../services/specific/animeServices";
-import TrendingAnimesRow from "../components/trendingRows/trendingAnimesRow";
-import NormalRow from "../components/common/NormalRow";
+import { animeServices } from "../../services/content/animeServices";
+import TrendingAnimesRow from "../../components/trendingRows/trendingAnimesRow";
+import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Anime() {
@@ -62,12 +62,12 @@ export default function Anime() {
           {/* top rated anime row */}
           <NormalRow
             title="Top Rated Anime"
-            fetchItems={() => animeServices.getTopRatedAnimes(1)}
+            fetchItems={() => animeServices.getTopRatedAnime(1)}
           />
           {/* currently airing anime row */}
           <NormalRow
-            title="Currently Airing"
-            fetchItems={() => animeServices.getOnTheAirAnimes(1)}
+            title="Upcoming Anime"
+            fetchItems={() => animeServices.getUpcomingAnime(1)}
           />
         </>
       )}

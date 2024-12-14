@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { movieServices } from "../services/specific/movieServices";
-import TrendingMoviesRow from "../components/trendingRows/trendingMoviesRow";
-import NormalRow from "../components/common/NormalRow";
+import { movieServices } from "../../services/content/movieServices";
+import TrendingMoviesRow from "../../components/trendingRows/trendingMoviesRow";
+import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
 export default function Movies() {
   const [query, setQuery] = useState(null);

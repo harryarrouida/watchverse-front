@@ -1,10 +1,10 @@
 import Sidebar from "./components/common/sidebar";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
-import Footer from "./components/ui/footer";
-import Movies from "./pages/Movies";
-import Shows from "./pages/Shows";
-import Anime from "./pages/Anime";
+import Home from "./pages/public/home";
+import Footer from "./components/common/footer";
+import Movies from "./pages/public/Movies";
+import Shows from "./pages/public/Shows";
+import Anime from "./pages/public/Anime";
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import { movieServices } from "../../services/specific/movieServices";
+import { movieServices } from "../../services/content/movieServices";
 import NormalRow from "../common/NormalRow";
 
 const TrendingMoviesRow = () => {

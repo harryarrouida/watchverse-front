@@ -1,4 +1,4 @@
-import { animeServices } from "../../services/specific/animeServices";
+import { animeServices } from "../../services/content/animeServices";
 import NormalRow from "../common/NormalRow";
 
 const TrendingAnimesRow = () => {

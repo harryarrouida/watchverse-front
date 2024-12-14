@@ -59,18 +59,18 @@ const Sidebar = () => {
         <div className="flex flex-col justify-between h-full bg-[#121212] rounded-lg p-2 gap-y-56">
           <div className="space-y-2">
             <Link
-              to="/favorites"
+              to="/track"
               className="flex items-center space-x-3 p-2 rounded"
             >
-              <BsBookmarkHeart size={24} />
-              <span>My Favorites</span>
+              <MdFavorite size={24} />
+              <span>Track</span>
             </Link>
             <Link
               to="/favorites"
               className="flex items-center space-x-3 p-2 rounded"
             >
               <MdFavorite size={24} />
-              <span>Favorites</span>
+              <span>test</span>
             </Link>
           </div>
 

@@ -12,11 +12,13 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
 
   useEffect(() => {
     if (data) {
+      console.log('Data received:', data);
       setContent(data);
     } else {
       const fetchContent = async () => {
         try {
           const response = await fetchItems();
+          console.log('Fetched results:', response.results);
           setContent(response.results);
         } catch (error) {
           console.error(`Error fetching ${title}:`, error);
@@ -65,8 +67,9 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
       const favorite = {
         title: item.title || item.name,
         type: "tv",
-        posterPath: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-        tmdbId: item.id
+        poster_path: item.poster_path,
+        tmdbId: item.id, 
+        vote_average: item.vote_average,
       };
       await addFavorite(favorite);
       console.log("Added to favorites:", favorite);
@@ -90,15 +93,17 @@ const NormalRow = ({ title, fetchItems, data = null }) => {
           style={{ transform: `translateX(${position}px)` }}
         >
           {content?.map((item) => (
-            <div key={item.id} className="relative">
-              <NormalPoster show={item} />
-              <button
-                onClick={() => handleAddFavorite(item)}
-                className="absolute bottom-2 left-2 text-white hover:text-red-500 transition-colors duration-200"
-              >
-                <MdFavorite size={24} />
-              </button>
-            </div>
+            item && (
+              <div key={item.id} className="relative">
+                <NormalPoster show={item} />
+                <button
+                  onClick={() => handleAddFavorite(item)}
+                  className="absolute bottom-2 left-2 text-white hover:text-red-500 transition-colors duration-200"
+                >
+                  <MdFavorite size={24} />
+                </button>
+              </div>
+            )
           ))}
         </div>
       </div>

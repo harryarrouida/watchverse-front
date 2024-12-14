@@ -6,26 +6,24 @@ import { updateStatus } from "../../services/tracker/trackerServices";
 import { addWithCustomStatus } from "../../services/tracker/trackerServices";
 
 export default function NormalPoster({ show }) {
-  const [isFavorite, setIsFavorite] = useState(show.is_favorite ? true : false);
   const [showPopup, setShowPopup] = useState(false);
+
+  console.log("show in NormalPoster", show);
 
   const handleFavoriteClick = async (e) => {
     e.stopPropagation();
-    const newFavoriteStatus = await toggleFavorite(show, isFavorite);
+    const newFavoriteStatus = await toggleFavorite(show, show.is_favorite);
     setIsFavorite(newFavoriteStatus);
   };
 
   const handleStatusClick = async (id, newStatus) => {
-    console.log("show", show);
+    console.log("show in handleStatusClick", show);
     if (show.status) {
       const response = await updateStatus(id, newStatus);
-      console.log(response);
+      console.log("response from updateStatus", response);
     } else {
       const response = await addWithCustomStatus(show, newStatus);
-
-      console.log("response", response);
-      console.log("show", show);
-      console.log("data", show.title, show.poster_path, show.vote_average, show.tmdbId, newStatus, show.type);
+      console.log("response from addWithCustomStatus", response);
     }
     setShowPopup(false);
   };
@@ -37,7 +35,7 @@ export default function NormalPoster({ show }) {
     >
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
         <span className="text-yellow-400">★</span>
-        <span className="text-white text-sm">{show.vote_average}</span>
+        <span className="text-white text-sm">{show.vote_average.toFixed(1)}</span>
       </div>
 
       <div className="absolute top-3 right-3 z-20">
@@ -85,7 +83,6 @@ export default function NormalPoster({ show }) {
         className="w-full h-[270px] object-cover rounded-lg"
         loading="lazy"
         show={show}
-
       />
 
       <div className="flex items-center justify-between mt-2 px-2">
@@ -96,10 +93,10 @@ export default function NormalPoster({ show }) {
           onClick={handleFavoriteClick}
           className="text-white hover:text-red-500 transition-colors duration-200"
         >
-          {isFavorite ? (
+          {show.is_favorite === true ? (
             <MdFavorite size={20} className="text-red-500" />
           ) : (
-            <MdFavoriteBorder size={20} />
+            <MdFavoriteBorder size={20} className="text-indigo-500" />
           )}
         </button>
       </div>

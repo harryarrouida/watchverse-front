@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   getFavorites,
-  removeFavorite,
+  getByStatus,
 } from "../../services/tracker/trackerServices";
 import NormalRow from "../../components/common/NormalRow";
-import { getByStatus } from "../../services/tracker/trackerServices";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
+  const [watching, setWatching] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [toWatch, setToWatch] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,10 +18,24 @@ const Favorites = () => {
   }
 
   useEffect(() => {
-    const fetchFavorites = async () => {
+    const fetchData = async () => {
       try {
         const favorites = await getFavorites();
+        console.log("favorites", favorites);
         setFavorites(favorites);
+
+        const watching = await getByStatus("watching");
+        console.log("watching", watching);
+        setWatching(watching);
+
+        const watched = await getByStatus("watched");
+        console.log("watched", watched);
+        setWatched(watched);
+
+        const toWatch = await getByStatus("to watch");
+        console.log("toWatch", toWatch);
+        setToWatch(toWatch);
+
         setLoading(false);
       } catch (error) {
         setError("Failed to load favorites", error);
@@ -27,7 +43,7 @@ const Favorites = () => {
       }
     };
 
-    fetchFavorites();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -55,10 +71,10 @@ const Favorites = () => {
       </div>
 
       <div className="space-y-4">
-        <NormalRow title="favorites" data={favorites} />
-        <NormalRow title="watching" fetchItems={getByStatus} status="watching"/>
-        <NormalRow title="watched" fetchItems={getByStatus} status="watched"/>
-        <NormalRow title="to watch" fetchItems={getByStatus} status="to watch"/>
+        <NormalRow title="favorites" content={favorites} />
+        <NormalRow title="watching" content={watching} />
+        <NormalRow title="watched" content={watched} />
+        <NormalRow title="to watch" content={toWatch} />
       </div>
 
     </div>

@@ -1,12 +1,36 @@
 import { useEffect, useState } from "react";
 import { animeServices } from "../../services/content/animeServices";
-import TrendingAnimesRow from "../../components/trendingRows/trendingAnimesRow";
 import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Anime() {
-  const [query, setQuery] = useState(null);
+  const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [trendingAnimes, setTrendingAnimes] = useState([]);
+  const [popularAnime, setPopularAnime] = useState([]);
+  const [topRatedAnime, setTopRatedAnime] = useState([]);
+  const [upcomingAnime, setUpcomingAnime] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const trending = await animeServices.getTrendingAnimes(1);
+        setTrendingAnimes(trending.results);
+
+        const popular = await animeServices.getPopularAnimeSeries(1);
+        setPopularAnime(popular.results);
+
+        const topRated = await animeServices.getTopRatedAnime(1);
+        setTopRatedAnime(topRated.results);
+
+        const upcoming = await animeServices.getUpcomingAnime(1);
+        setUpcomingAnime(upcoming.results);
+      } catch (error) {
+        console.error("Error fetching anime:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSearch = async (e) => {
     const searchTerm = e.target.value;
@@ -49,26 +73,13 @@ export default function Anime() {
       </div>
 
       {searchResults.length > 0 ? (
-        <NormalRow title="Search Results" data={searchResults} />
+        <NormalRow title="Search Results" content={searchResults} />
       ) : (
         <>
-          {/* trending anime row */}
-          <TrendingAnimesRow />
-          {/* popular anime row */}
-          <NormalRow
-            title="Popular Anime"
-            fetchItems={() => animeServices.getPopularAnimeSeries(1)}
-          />
-          {/* top rated anime row */}
-          <NormalRow
-            title="Top Rated Anime"
-            fetchItems={() => animeServices.getTopRatedAnime(1)}
-          />
-          {/* currently airing anime row */}
-          <NormalRow
-            title="Upcoming Anime"
-            fetchItems={() => animeServices.getUpcomingAnime(1)}
-          />
+          <NormalRow title="Trending Anime" content={trendingAnimes} />
+          <NormalRow title="Popular Anime" content={popularAnime} />
+          <NormalRow title="Top Rated Anime" content={topRatedAnime} />
+          <NormalRow title="Upcoming Anime" content={upcomingAnime} />
         </>
       )}
     </div>

@@ -1,35 +1,23 @@
 import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect } from "react";
 import NormalPoster from "./NormalPoster";
-import { getByStatus } from "../../services/tracker/trackerServices";
 
-const NormalRow = ({ title, fetchItems, data = null, status = null }) => {
+const NormalRow = ({ title, content = [], favorites = [] }) => {
   const [position, setPosition] = useState(0);
-  const [content, setContent] = useState([]);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        if (data) {
-          setContent(data);
-        } else if (status) {
-          const response = await getByStatus(status);
-          setContent(response);
-        } else if (fetchItems) {
-          const response = await fetchItems();
-          setContent(response.results);
-        }
-      } catch (error) {
-        console.error(`Error fetching content:`, error);
-      }
-    };
-
-    fetchContent();
-  }, [data, fetchItems, status]);
+  // Process content to include is_favorite flag
+  const processedContent = content.map(item => ({
+    ...item,
+    is_favorite: item.is_favorite === true ? true : favorites.some(fav => fav.tmdbId === item.id)
+  }));
 
   useEffect(() => {
+    console.log("content from normal row", content);
+    console.log("favorites from normal row", favorites);
+    console.log("processedContent from normal row", processedContent);
+
     let intervalId;
 
     if (isAnimating && rowRef.current) {
@@ -76,13 +64,14 @@ const NormalRow = ({ title, fetchItems, data = null, status = null }) => {
           className="flex transition-transform duration-1000 ease-in-out"
           style={{ transform: `translateX(${position}px)` }}
         >
-          {content?.map((item) => (
-            item && (
-              <div key={item._id}>
-                <NormalPoster show={item}/>
-              </div>
-            )
-          ))}
+          {processedContent.map(
+            (item) =>
+              item && (
+                <div key={item.id || item._id}>
+                  <NormalPoster show={item} />
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>

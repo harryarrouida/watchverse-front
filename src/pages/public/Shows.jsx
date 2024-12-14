@@ -1,12 +1,48 @@
 import { useEffect, useState } from "react";
 import { tvShowServices } from "../../services/content/tvshowServices";
-import TrendingShowsRow from "../../components/trendingRows/trendingShowsRow";
 import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
+import { getFavorites } from "../../services/tracker/trackerServices";
 
 export default function Shows() {
-  const [query, setQuery] = useState(null);
+  const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [trendingShows, setTrendingShows] = useState([]);
+  const [popularShows, setPopularShows] = useState([]);
+  const [topRatedShows, setTopRatedShows] = useState([]);
+  const [onTheAirShows, setOnTheAirShows] = useState([]);
+
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const favorites = await getFavorites();
+      setFavorites(favorites);
+      console.log("favorites from shows", favorites);
+    };
+    fetchFavorites();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const trending = await tvShowServices.getTrendingTvShows();
+        setTrendingShows(trending.results);
+
+        const popular = await tvShowServices.getPopularTvShows();
+        setPopularShows(popular.results);
+
+        const topRated = await tvShowServices.getTopRatedTvShows();
+        setTopRatedShows(topRated.results);
+
+        const onTheAir = await tvShowServices.getOnTheAirTvShows();
+        setOnTheAirShows(onTheAir.results);
+      } catch (error) {
+        console.error("Error fetching shows:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSearch = async (e) => {
     const searchTerm = e.target.value;
@@ -49,26 +85,13 @@ export default function Shows() {
       </div>
 
       {searchResults.length > 0 ? (
-        <NormalRow title="Search Results" data={searchResults} />
+        <NormalRow title="Search Results" content={searchResults} />
       ) : (
         <>
-          {/* trending shows row */}
-          <TrendingShowsRow />
-          {/* popular shows row */}
-          <NormalRow
-            title="Popular Shows"
-            fetchItems={tvShowServices.getPopularTvShows}
-          />
-          {/* top rated shows row */}
-          <NormalRow
-            title="Top Rated Shows"
-            fetchItems={tvShowServices.getTopRatedTvShows}
-          />
-          {/* on the air shows row */}
-          <NormalRow
-            title="On The Air"
-            fetchItems={tvShowServices.getOnTheAirTvShows}
-          />
+          <NormalRow title="Trending Shows" content={trendingShows} favorites={favorites} />
+          <NormalRow title="Popular Shows" content={popularShows} favorites={favorites} />
+          <NormalRow title="Top Rated Shows" content={topRatedShows} favorites={favorites} />
+          <NormalRow title="On The Air" content={onTheAirShows} favorites={favorites} />
         </>
       )}
     </div>

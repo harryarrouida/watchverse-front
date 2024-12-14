@@ -1,17 +1,88 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { movieServices } from "../../services/content/movieServices";
-import TrendingMoviesRow from "../../components/trendingRows/trendingMoviesRow";
 import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
-export default function Movies() {
-  const [query, setQuery] = useState(null);
 
+export default function Movies() {
   const [searchResults, setSearchResults] = useState([]);
+  const [query, setQuery] = useState("");
+
+  // data
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
+
+  const [dumbData, setDumbData] = useState([
+    {
+      id: 550,
+      title: "Fight Club",
+      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      release_date: "1999-10-15",
+      vote_average: 8.4,
+      type: "movie",
+      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      overview:
+        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
+    },
+    {
+      id: 551,
+      title: "Fight Club",
+      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      release_date: "1999-10-15",
+      vote_average: 8.4,
+      type: "movie",
+      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      overview:
+        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
+    },
+    {
+      id: 552,
+      title: "Fight Club",
+      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      release_date: "1999-10-15",
+      vote_average: 8.4,
+      type: "movie",
+      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+      overview:
+        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
+    },
+  ]);
+
+  // fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const trending = await movieServices.getTrendingMovies();
+        if (trending?.results && Array.isArray(trending.results)) {
+          setTrendingMovies(trending.results);
+        }
+
+        const popular = await movieServices.getPopularMovies();
+        if (popular?.results && Array.isArray(popular.results)) {
+          setPopularMovies(popular.results);
+        }
+
+        const topRated = await movieServices.getTopRatedMovies();
+        if (topRated?.results && Array.isArray(topRated.results)) {
+          setTopRatedMovies(topRated.results);
+        }
+
+        const upcoming = await movieServices.getUpcomingMovies();
+        if (upcoming?.results && Array.isArray(upcoming.results)) {
+          setUpcomingMovies(upcoming.results);
+        }
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSearch = async (e) => {
     const searchTerm = e.target.value;
     setQuery(searchTerm);
-    
+
     if (!searchTerm.trim()) {
       setSearchResults([]);
       return;
@@ -52,23 +123,10 @@ export default function Movies() {
         <NormalRow title="Search Results" data={searchResults} />
       ) : (
         <>
-          {/* trending movies row */}
-          <TrendingMoviesRow />
-          {/* popular movies row */}
-          <NormalRow
-            title="Popular Movies"
-            fetchItems={movieServices.getPopularMovies}
-          />
-          {/* top rated movies row */}
-          <NormalRow
-            title="Top Rated Movies"
-            fetchItems={movieServices.getTopRatedMovies}
-          />
-          {/* upcoming movies row */}
-          <NormalRow
-            title="Upcoming Movies"
-            fetchItems={movieServices.getUpcomingMovies}
-          />
+          <NormalRow title="Trending Movies" content={trendingMovies} />
+          <NormalRow title="Popular Movies" content={popularMovies} />
+          <NormalRow title="Top Rated Movies" content={topRatedMovies} />
+          <NormalRow title="Upcoming Movies" content={upcomingMovies} />
         </>
       )}
     </div>

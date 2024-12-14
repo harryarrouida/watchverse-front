@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import {
   getFavorites,
   getByStatus,
 } from "../../services/tracker/trackerServices";
 import NormalRow from "../../components/common/NormalRow";
+import { FavoritesProvider } from "../../contexts/FavoritesContext";
 
-const Favorites = () => {
-  const [favorites, setFavorites] = useState([]);
+const Track = () => {
   const [watching, setWatching] = useState([]);
   const [watched, setWatched] = useState([]);
   const [toWatch, setToWatch] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,31 +22,27 @@ const Favorites = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const favorites = await getFavorites();
-        console.log("favorites", favorites);
-        setFavorites(favorites);
-
         const watching = await getByStatus("watching");
-        console.log("watching", watching);
         setWatching(watching);
 
         const watched = await getByStatus("watched");
-        console.log("watched", watched);
         setWatched(watched);
 
         const toWatch = await getByStatus("to watch");
-        console.log("toWatch", toWatch);
         setToWatch(toWatch);
+
+        const favorites = await getFavorites();
+        setFavorites(favorites);
 
         setLoading(false);
       } catch (error) {
-        setError("Failed to load favorites", error);
+        setError("Failed to load content", error);
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [favorites]);
 
   if (loading) {
     return (
@@ -63,22 +61,23 @@ const Favorites = () => {
   }
 
   return (
-    <div className="h-auto text-white bg-gradient-to-b from-[#121212] to-black rounded-lg pt-10">
-      <div className="text-start">
-        <h1 className="text-4xl font-bold z-20 text-white ml-10">
-          Track all of your shows and movies
-        </h1>
-      </div>
+    <FavoritesProvider value={{ favorites, setFavorites }}>
+      <div className="h-auto text-white bg-gradient-to-b from-[#121212] to-black rounded-lg pt-10">
+        <div className="text-start">
+          <h1 className="text-4xl font-bold z-20 text-white ml-10">
+            Track all of your shows and movies
+          </h1>
+        </div>
 
-      <div className="space-y-4">
-        <NormalRow title="favorites" content={favorites} />
-        <NormalRow title="watching" content={watching} />
-        <NormalRow title="watched" content={watched} />
-        <NormalRow title="to watch" content={toWatch} />
+        <div className="space-y-4">
+          <NormalRow title="favorites" content={favorites} />
+          <NormalRow title="watching" content={watching} />
+          <NormalRow title="watched" content={watched} />
+          <NormalRow title="to watch" content={toWatch} />
+        </div>
       </div>
-
-    </div>
+    </FavoritesProvider>
   );
 };
 
-export default Favorites;
+export default Track;

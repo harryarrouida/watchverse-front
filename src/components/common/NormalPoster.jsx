@@ -4,16 +4,23 @@ import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
 import { toggleFavorite } from "../../utils/favoriteUtils";
 import { updateStatus } from "../../services/tracker/trackerServices";
 import { addWithCustomStatus } from "../../services/tracker/trackerServices";
+import { useFavorites } from "../../contexts/FavoritesContext";
 
 export default function NormalPoster({ show }) {
   const [showPopup, setShowPopup] = useState(false);
+  const { updateFavorites } = useFavorites();
 
   console.log("show in NormalPoster", show);
 
   const handleFavoriteClick = async (e) => {
     e.stopPropagation();
     const newFavoriteStatus = await toggleFavorite(show, show.is_favorite);
-    setIsFavorite(newFavoriteStatus);
+    if (newFavoriteStatus !== undefined) {
+      await updateFavorites();
+      if (show.is_favorite && !newFavoriteStatus) {
+        await updateFavorites();
+      }
+    }
   };
 
   const handleStatusClick = async (id, newStatus) => {
@@ -96,7 +103,7 @@ export default function NormalPoster({ show }) {
           {show.is_favorite === true ? (
             <MdFavorite size={20} className="text-red-500" />
           ) : (
-            <MdFavoriteBorder size={20} className="text-indigo-500" />
+            <MdFavoriteBorder size={20} />
           )}
         </button>
       </div>

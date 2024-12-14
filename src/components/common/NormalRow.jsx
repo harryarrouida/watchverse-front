@@ -1,17 +1,28 @@
 import { useSwipeable } from "react-swipeable";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import NormalPoster from "./NormalPoster";
+import { useFavorites } from "../../contexts/FavoritesContext";
 
-const NormalRow = ({ title, content = [], favorites = [] }) => {
+const NormalRow = ({ title, content = [] }) => {
+  const { favorites } = useFavorites();
   const [position, setPosition] = useState(0);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
-  // Process content to include is_favorite flag
-  const processedContent = content.map(item => ({
-    ...item,
-    is_favorite: item.is_favorite === true ? true : favorites.some(fav => fav.tmdbId === item.id)
-  }));
+  // Memoize processed content to avoid unnecessary recalculations
+  const processedContent = useMemo(() => {
+    if (title === "favorites") {
+      return content.map((item) => ({
+        ...item,
+        is_favorite: true,
+      }));
+    }
+
+    return content.map((item) => ({
+      ...item,
+      is_favorite: favorites.some((fav) => fav.tmdbId === item.id),
+    }));
+  }, [content, favorites]);
 
   useEffect(() => {
     console.log("content from normal row", content);

@@ -1,5 +1,17 @@
+import { useState } from "react";
 import LazyImage from "./LazyImage";
-export default function NormalPoster({ show }) {
+import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { toggleFavorite } from "../../utils/favoriteUtils";
+
+export default function NormalPoster({ show}) {
+  const [isFavorite, setIsFavorite] = useState(show.is_favorite ? true : false);
+
+  const handleFavoriteClick = async (e) => {
+    e.stopPropagation();
+    const newFavoriteStatus = await toggleFavorite(show, isFavorite);
+    setIsFavorite(newFavoriteStatus);
+  };
+
   return (
     <div
       key={show.id}
@@ -11,6 +23,16 @@ export default function NormalPoster({ show }) {
           {show.vote_average}
         </span>
       </div>
+      <button
+        onClick={handleFavoriteClick}
+        className="absolute bottom-2 left-2 text-white hover:text-red-500 transition-colors duration-200 z-20"
+      >
+        {isFavorite ? (
+          <MdFavorite size={24} className="text-red-500" />
+        ) : (
+          <MdFavoriteBorder size={24} />
+        )}
+      </button>
       <LazyImage
         src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
         alt={show.name}

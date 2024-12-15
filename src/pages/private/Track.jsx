@@ -34,9 +34,9 @@ const TrackContent = () => {
 
       <div className="space-y-4">
         <NormalRow title="favorites" content={favorites} />
-        <NormalRow title="watching" content={watching} />
-        <NormalRow title="watched" content={watched} />
-        <NormalRow title="to watch" content={toWatch} />
+        <NormalRow title="watching" content={watching} showHeart={false}/>
+        <NormalRow title="watched" content={watched} showHeart={false}/>
+        <NormalRow title="to watch" content={toWatch} showHeart={false}/>
       </div>
     </div>
   );

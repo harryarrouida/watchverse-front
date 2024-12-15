@@ -36,6 +36,8 @@ export function TrackProvider({ children }) {
   const handleAddWithCustomStatus = async (show, status) => {
     try {
       setLoading(true);
+      console.log("show from handleAddWithCustomStatus", show);
+      console.log("status from handleAddWithCustomStatus", status);
       const response = await addWithCustomStatus(show, status);
       if (response) {
         await updateTrackLists(); // Refresh all lists after adding
@@ -51,6 +53,8 @@ export function TrackProvider({ children }) {
   };
 
   const handleUpdateStatus = async (id, newStatus) => {
+    console.log("id from handleUpdateStatus", id);
+    console.log("newStatus from handleUpdateStatus", newStatus);
     try {
       const response = await updateStatus(id, newStatus);
       if (response) {

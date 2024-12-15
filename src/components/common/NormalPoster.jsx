@@ -1,17 +1,15 @@
 import { useState } from "react";
 import LazyImage from "./LazyImage";
-import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
+import { MdFavorite, MdFavoriteBorder, MdAdd, MdPlayArrow, MdDone, MdWatchLater } from "react-icons/md";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useTrack } from "../../contexts/TrackContext";
 
-export default function NormalPoster({ show }) {
+export default function NormalPoster({ show, showHeart = true}) {
   const [showPopup, setShowPopup] = useState(false);
   const { handleAddFavorite, handleRemoveFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
   const { addWithCustomStatus, updateStatus } = useTrack();
 
   const handleFavoriteClick = async (e) => {
-    console.log("show from handleFavoriteClick", show);
-    console.log("show._id from handleFavoriteClick", show._id);
     e.stopPropagation();
     if (show.is_favorite === true) {
       await handleRemoveFavoriteByTmdbId(show.id || show.tmdbId);
@@ -20,19 +18,36 @@ export default function NormalPoster({ show }) {
     }
   };
 
-  const handleStatusClick = async (id, newStatus) => {
+  const handleStatusClick = async (show, newStatus) => {
     if (show.status) {
-      await updateStatus(id, newStatus);
+      await updateStatus(show._id, newStatus);
     } else {
       await addWithCustomStatus(show, newStatus);
     }
     setShowPopup(false);
   };
 
+  const getStatusIcon = () => {
+    if (!show.status) return <MdAdd size={20} />;
+    switch (show.status) {
+      case 'watching':
+        return <MdPlayArrow size={20} />;
+      case 'watched':
+        return <MdDone size={20} />;
+      case 'to watch':
+        return <MdWatchLater size={20} />;
+      default:
+        return <MdAdd size={20} />;
+    }
+  };
+
+  // Don't render if it's in "to watch" row and has "to watch" status
+  // if (show.status === "to watch" && title === "to watch") return null;
+
   return (
     <div
       key={show.id}
-      className="min-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300 group"
+      className="min-w-[180px] max-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300 group"
     >
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
         <span className="text-yellow-400">★</span>
@@ -44,35 +59,36 @@ export default function NormalPoster({ show }) {
           className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80"
           onClick={() => setShowPopup(!showPopup)}
           onBlur={() => {
-            // Add a small delay before hiding to allow clicking popup items
             setTimeout(() => setShowPopup(false), 200);
           }}
         >
-          <MdAdd className="text-white" size={20} />
+          <div className="text-white">
+            {getStatusIcon()}
+          </div>
         </button>
 
         {showPopup && (
           <div className="absolute right-0 mt-2 w-32 bg-black/90 backdrop-blur-sm rounded-md shadow-lg overflow-hidden">
             <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
-              onMouseDown={(e) => e.preventDefault()} // Prevent onBlur from firing before click
-              onClick={(e) => handleStatusClick(show._id, "watching")}
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => handleStatusClick(show, "watching")}
             >
-              Watching
+              <MdPlayArrow size={16} /> Watching
             </button>
             <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
               onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => handleStatusClick(show._id, "watched")}
+              onClick={(e) => handleStatusClick(show, "watched")}
             >
-              Watched
+              <MdDone size={16} /> Watched
             </button>
             <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left"
+              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
               onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => handleStatusClick(show._id, "to watch")}
+              onClick={(e) => handleStatusClick(show, "to watch")}
             >
-              To Watch
+              <MdWatchLater size={16} /> To Watch
             </button>
           </div>
         )}
@@ -94,10 +110,12 @@ export default function NormalPoster({ show }) {
           onClick={handleFavoriteClick}
           className="text-white hover:text-red-500 transition-colors duration-200"
         >
-          {show.is_favorite === true ? (
-            <MdFavorite size={20} className="text-red-500" />
-          ) : (
-            <MdFavoriteBorder size={20} />
+          {showHeart && (
+            show.is_favorite === true ? (
+              <MdFavorite size={20} className="text-red-500" />
+            ) : (
+              <MdFavoriteBorder size={20} />
+            )
           )}
         </button>
       </div>

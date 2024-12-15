@@ -1,6 +1,7 @@
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
+// working
 export const getFavorites = async () => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -18,6 +19,7 @@ export const getFavorites = async () => {
   }
 };
 
+// working
 export const addFavorite = async (favorite) => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -35,6 +37,7 @@ export const addFavorite = async (favorite) => {
   }
 };
 
+// working
 export const removeFavorite = async (favoriteId) => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -55,6 +58,7 @@ export const removeFavorite = async (favoriteId) => {
   }
 };
 
+// working
 export const removeFavoriteByTmdbId = async (tmdbId) => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -73,6 +77,7 @@ export const removeFavoriteByTmdbId = async (tmdbId) => {
   }
 };
 
+// working
 export const getByStatus = async (status) => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -90,7 +95,7 @@ export const getByStatus = async (status) => {
   }
 };
 
-export const updateStatus = async ({ id, newStatus }) => {
+export const updateStatus = async (id, newStatus) => {
   if (!localStorage.getItem("token")) {
     return [];
   }
@@ -119,12 +124,12 @@ export const addWithCustomStatus = async (show, status) => {
     return [];
   }
   try {
-    // console.log("show from service", show);
-    // console.log("status from service", status);
+    console.log("show from service", show);
+    console.log("status from service", status);
     const response = await axios.post(
       `${API_URL}/track/status/custom/`,
       {
-        title: show.title,
+        title: show.title || show.name,
         poster_path: show.poster_path,
         vote_average: show.vote_average,
         tmdbId: show.id,

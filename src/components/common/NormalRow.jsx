@@ -2,10 +2,11 @@ import { useSwipeable } from "react-swipeable";
 import { useState, useRef, useEffect, useMemo } from "react";
 import NormalPoster from "./NormalPoster";
 import { useFavorites } from "../../contexts/FavoritesContext";
+import EmptyPoster from "./EmptyPoster";
 
-const NormalRow = ({ title, content = [], animate = false }) => {
+const NormalRow = ({ title, content = [], animate = false, showHeart = true }) => {
   const { favorites } = useFavorites();
-  
+
   const [position, setPosition] = useState(0);
   const rowRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(animate);
@@ -13,17 +14,17 @@ const NormalRow = ({ title, content = [], animate = false }) => {
   // Memoize processed content to avoid unnecessary recalculations
   const processedContent = useMemo(() => {
     let currentContent = content;
-    
+
     if (title === "favorites") {
-      return content.map(item => ({
+      return content.map((item) => ({
         ...item,
-        is_favorite: true
+        is_favorite: true,
       }));
     }
 
-    return currentContent.map(item => ({
+    return currentContent.map((item) => ({
       ...item,
-      is_favorite: favorites.some(fav => fav.tmdbId === item.id)
+      is_favorite: favorites.some((fav) => fav.tmdbId === item.id),
     }));
   }, [content, favorites, title]);
 
@@ -69,21 +70,25 @@ const NormalRow = ({ title, content = [], animate = false }) => {
         onMouseEnter={() => setIsAnimating(false)}
         onMouseLeave={() => setIsAnimating(true)}
       >
-        <div
-          {...handlers}
-          ref={rowRef}
-          className="flex transition-transform duration-1000 ease-in-out"
-          style={{ transform: `translateX(${position}px)` }}
-        >
-          {processedContent.map(
-            (item) =>
-              item && (
-                <div key={item.id || item._id}>
-                  <NormalPoster show={item} />
-                </div>
-              )
-          )}
-        </div>
+        {processedContent.length === 0 ? (
+          <EmptyPoster count={1} />
+        ) : (
+          <div
+            {...handlers}
+            ref={rowRef}
+            className="flex transition-transform duration-1000 ease-in-out"
+            style={{ transform: `translateX(${position}px)` }}
+          >
+            {processedContent.map(
+              (item) =>
+                item && (
+                  <div key={item.id || item._id}>
+                    <NormalPoster show={item} showHeart={showHeart} />
+                  </div>
+                )
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

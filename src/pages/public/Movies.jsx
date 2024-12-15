@@ -54,7 +54,9 @@ export default function Movies() {
 
     try {
       const response = await movieServices.searchMovies(searchTerm);
-      setSearchResults(response.results);
+      if (response?.results && Array.isArray(response.results)) {
+        setSearchResults(response.results);
+      }
     } catch (error) {
       console.error("Error searching movies:", error);
       setSearchResults([]);
@@ -71,6 +73,7 @@ export default function Movies() {
       <div className="flex items-center justify-center">
         <div className="relative w-full mt-10 ml-10">
           <input
+            value={query}
             onChange={handleSearch}
             type="text"
             placeholder="Search movies..."
@@ -84,7 +87,7 @@ export default function Movies() {
       </div>
 
       {searchResults.length > 0 ? (
-        <NormalRow title="Search Results" data={searchResults} animate={false}/>
+        <NormalRow title="Search Results" content={searchResults} animate={false} />
       ) : (
         <>
           <NormalRow title="Trending Movies" content={trendingMovies} />

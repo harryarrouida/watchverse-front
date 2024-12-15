@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { tvShowServices } from "../../services/content/tvshowServices";
 import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
-import { getFavorites } from "../../services/tracker/trackerServices";
 import { FavoritesProvider } from "../../contexts/FavoritesContext";
 
 export default function Shows() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  
   const [trendingShows, setTrendingShows] = useState([]);
   const [popularShows, setPopularShows] = useState([]);
   const [topRatedShows, setTopRatedShows] = useState([]);

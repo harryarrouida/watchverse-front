@@ -55,6 +55,24 @@ export const removeFavorite = async (favoriteId) => {
   }
 };
 
+export const removeFavoriteByTmdbId = async (tmdbId) => {
+  if (!localStorage.getItem("token")) {
+    return [];
+  }
+  try {
+    console.log("tmdbId from removeFavoriteByTmdbId", tmdbId);
+    const response = await axios.delete(`${API_URL}/track/favorites/tmdb/${tmdbId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+    throw error;
+  }
+};
+
 export const getByStatus = async (status) => {
   if (!localStorage.getItem("token")) {
     return [];

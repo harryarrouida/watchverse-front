@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { movieServices } from "../../services/content/movieServices";
 import NormalRow from "../../components/common/NormalRow";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -12,42 +12,6 @@ export default function Movies() {
   const [popularMovies, setPopularMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
-
-  const [dumbData, setDumbData] = useState([
-    {
-      id: 550,
-      title: "Fight Club",
-      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      release_date: "1999-10-15",
-      vote_average: 8.4,
-      type: "movie",
-      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      overview:
-        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
-    },
-    {
-      id: 551,
-      title: "Fight Club",
-      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      release_date: "1999-10-15",
-      vote_average: 8.4,
-      type: "movie",
-      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      overview:
-        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
-    },
-    {
-      id: 552,
-      title: "Fight Club",
-      poster_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      release_date: "1999-10-15",
-      vote_average: 8.4,
-      type: "movie",
-      backdrop_path: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-      overview:
-        "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground 'fight clubs' forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
-    },
-  ]);
 
   // fetch data
   useEffect(() => {
@@ -120,7 +84,7 @@ export default function Movies() {
       </div>
 
       {searchResults.length > 0 ? (
-        <NormalRow title="Search Results" data={searchResults} />
+        <NormalRow title="Search Results" data={searchResults} animate={false}/>
       ) : (
         <>
           <NormalRow title="Trending Movies" content={trendingMovies} />

@@ -7,28 +7,27 @@ import Shows from "./pages/public/Shows";
 import Anime from "./pages/public/Anime";
 import Track from "./pages/private/Track";
 import { FavoritesProvider } from './contexts/FavoritesContext';
+import { TrackProvider } from './contexts/TrackContext';
 
 function App() {
   return (
-    <FavoritesProvider>
-      <div className="min-h-screen bg-black p-2">
-        <Sidebar />
-        <main className="ml-[300px]">
-          <Routes> 
-            <Route path="/" element={<Home />} />
-
-            {/* public content routes */}
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/shows" element={<Shows />} />
-            <Route path="/anime" element={<Anime />} />
-
-            {/* private content routes */}
-            <Route path="/track" element={<Track />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </FavoritesProvider>
+    <TrackProvider>
+      <FavoritesProvider>
+        <div className="min-h-screen bg-black p-2">
+          <Sidebar />
+          <main className="ml-[300px]">
+            <Routes> 
+              <Route path="/" element={<Home />} />
+              <Route path="/movies" element={<Movies />} />
+              <Route path="/shows" element={<Shows />} />
+              <Route path="/anime" element={<Anime />} />
+              <Route path="/track" element={<Track />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </FavoritesProvider>
+    </TrackProvider>
   );
 }
 

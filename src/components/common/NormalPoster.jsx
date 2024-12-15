@@ -1,36 +1,30 @@
 import { useState } from "react";
 import LazyImage from "./LazyImage";
 import { MdFavorite, MdFavoriteBorder, MdAdd } from "react-icons/md";
-import { toggleFavorite } from "../../utils/favoriteUtils";
-import { updateStatus } from "../../services/tracker/trackerServices";
-import { addWithCustomStatus } from "../../services/tracker/trackerServices";
 import { useFavorites } from "../../contexts/FavoritesContext";
+import { useTrack } from "../../contexts/TrackContext";
 
 export default function NormalPoster({ show }) {
   const [showPopup, setShowPopup] = useState(false);
-  const { updateFavorites } = useFavorites();
-
-  console.log("show in NormalPoster", show);
+  const { handleAddFavorite, handleRemoveFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
+  const { addWithCustomStatus, updateStatus } = useTrack();
 
   const handleFavoriteClick = async (e) => {
+    console.log("show from handleFavoriteClick", show);
+    console.log("show._id from handleFavoriteClick", show._id);
     e.stopPropagation();
-    const newFavoriteStatus = await toggleFavorite(show, show.is_favorite);
-    if (newFavoriteStatus !== undefined) {
-      await updateFavorites();
-      if (show.is_favorite && !newFavoriteStatus) {
-        await updateFavorites();
-      }
+    if (show.is_favorite === true) {
+      await handleRemoveFavoriteByTmdbId(show.id || show.tmdbId);
+    } else {
+      await handleAddFavorite(show);
     }
   };
 
   const handleStatusClick = async (id, newStatus) => {
-    console.log("show in handleStatusClick", show);
     if (show.status) {
-      const response = await updateStatus(id, newStatus);
-      console.log("response from updateStatus", response);
+      await updateStatus(id, newStatus);
     } else {
-      const response = await addWithCustomStatus(show, newStatus);
-      console.log("response from addWithCustomStatus", response);
+      await addWithCustomStatus(show, newStatus);
     }
     setShowPopup(false);
   };

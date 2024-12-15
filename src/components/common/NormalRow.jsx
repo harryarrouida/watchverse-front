@@ -3,49 +3,49 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import NormalPoster from "./NormalPoster";
 import { useFavorites } from "../../contexts/FavoritesContext";
 
-const NormalRow = ({ title, content = [] }) => {
+const NormalRow = ({ title, content = [], animate = false }) => {
   const { favorites } = useFavorites();
+  
   const [position, setPosition] = useState(0);
   const rowRef = useRef(null);
-  const [isAnimating, setIsAnimating] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(animate);
 
   // Memoize processed content to avoid unnecessary recalculations
   const processedContent = useMemo(() => {
+    let currentContent = content;
+    
     if (title === "favorites") {
-      return content.map((item) => ({
+      return content.map(item => ({
         ...item,
-        is_favorite: true,
+        is_favorite: true
       }));
     }
 
-    return content.map((item) => ({
+    return currentContent.map(item => ({
       ...item,
-      is_favorite: favorites.some((fav) => fav.tmdbId === item.id),
+      is_favorite: favorites.some(fav => fav.tmdbId === item.id)
     }));
-  }, [content, favorites]);
+  }, [content, favorites, title]);
 
-  useEffect(() => {
-    console.log("content from normal row", content);
-    console.log("favorites from normal row", favorites);
-    console.log("processedContent from normal row", processedContent);
+  // animation handler
+  // useEffect(() => {
+  //   let intervalId;
 
-    let intervalId;
+  //   if (isAnimating && rowRef.current) {
+  //     intervalId = setInterval(() => {
+  //       const rowWidth = rowRef.current.scrollWidth;
+  //       const containerWidth = rowRef.current.clientWidth;
+  //       const maxPosition = -(rowWidth - containerWidth);
 
-    if (isAnimating && rowRef.current) {
-      intervalId = setInterval(() => {
-        const rowWidth = rowRef.current.scrollWidth;
-        const containerWidth = rowRef.current.clientWidth;
-        const maxPosition = -(rowWidth - containerWidth);
+  //       setPosition((prevPosition) => {
+  //         const newPosition = prevPosition - 220;
+  //         return newPosition <= maxPosition ? 0 : newPosition;
+  //       });
+  //     }, 3000);
+  //   }
 
-        setPosition((prevPosition) => {
-          const newPosition = prevPosition - 220;
-          return newPosition <= maxPosition ? 0 : newPosition;
-        });
-      }, 3000);
-    }
-
-    return () => clearInterval(intervalId);
-  }, [isAnimating]);
+  //   return () => clearInterval(intervalId);
+  // }, [isAnimating]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {

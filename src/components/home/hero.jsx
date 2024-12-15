@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import AuthModal from "../modals/AuthModal";
 
 import { tmdbServices } from "../../services/tmdbServices";
@@ -13,22 +13,21 @@ import { useAuth } from "../../contexts/AuthContext";
 export default function Hero() {
   const [content, setContent] = useState(null);
   const [allContent, setAllContent] = useState([]);
-
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-
+  const [isAnimating, setIsAnimating] = useState(true); // Set to true by default
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const {isLoggedIn} = useAuth()
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     const fetchTrendingContent = async () => {
       try {
         const data = await tmdbServices.getTrendingAll();
-        setAllContent(data.results);
-        // Set initial random content
-        setContent(
-          data.results[Math.floor(Math.random() * data.results.length)]
-        );
+        if (data?.results && Array.isArray(data.results)) {
+          setAllContent(data.results);
+          // Set initial random content
+          const initialContent = data.results[Math.floor(Math.random() * data.results.length)];
+          setContent(initialContent);
+        }
       } catch (error) {
         console.error("Error fetching trending content:", error);
       }
@@ -38,27 +37,24 @@ export default function Hero() {
 
     // Set up interval to change content every 10 seconds
     const intervalId = setInterval(() => {
-      if (isAnimating) {
+      if (isAnimating && allContent.length > 0) {
         setContent((currentContent) => {
-          if (!allContent.length) return currentContent;
-          let randomIndex;
-          let newContent;
-          // Keep generating random index until we get different content
-          do {
-            randomIndex = Math.floor(Math.random() * allContent.length);
-            newContent = allContent[randomIndex];
-          } while (
-            newContent?.id === currentContent?.id &&
-            allContent.length > 1
+          const availableContent = allContent.filter(item => 
+            item?.id !== currentContent?.id && 
+            item?.backdrop_path // Ensure content has backdrop image
           );
-          return newContent;
+          
+          if (availableContent.length === 0) return currentContent;
+          
+          const randomIndex = Math.floor(Math.random() * availableContent.length);
+          return availableContent[randomIndex];
         });
       }
     }, 10000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [allContent.length]); // Only re-run if content array length changes
+  }, [allContent.length, isAnimating]);
 
   if (isSearchModalOpen) {
     return (
@@ -72,26 +68,19 @@ export default function Hero() {
     setIsAuthModalOpen(!isAuthModalOpen);
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   setToken(token);
-  // }, [isAuthModalOpen]);
-
-  if (!content) return null;
+  if (!content || !content.backdrop_path) return null;
 
   return (
     <div className="relative h-screen rounded-lg">
       {/* Background Image */}
       <div className="absolute inset-0 rounded-lg">
-        {content ? (
-          <LazyImage
-            src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
-            alt={content.title || content.name}
-            className="w-full h-full object-cover opacity-40 rounded-lg"
-            loading="lazy"
-            show={content}
-          />
-        ) : null}
+        <LazyImage
+          src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
+          alt={content.title || content.name}
+          className="w-full h-full object-cover opacity-40 rounded-lg"
+          loading="lazy"
+          show={content}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
       </div>
 
@@ -136,23 +125,18 @@ export default function Hero() {
           </h1>
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-xl font-semibold">
-              ★ {content.vote_average.toFixed(1)}
+              ★ {content.vote_average?.toFixed(1)}
             </span>
             <span className="text-gray-300">
               Release: {content.release_date || content.first_air_date}
+            </span>
+            <span className="text-gray-300">
+              {content.media_type === 'movie' ? 'Movie' : 'TV Series'}
             </span>
           </div>
           <p className="text-gray-300 text-lg max-w-2xl line-clamp-3">
             {content.overview}
           </p>
-          <div className="flex gap-4">
-            <button className="px-8 py-3 bg-white text-black font-semibold rounded hover:bg-opacity-90 transition">
-              Watch Now
-            </button>
-            <button className="px-8 py-3 bg-gray-600/30 text-white font-semibold rounded hover:bg-gray-600/50 transition">
-              More Info
-            </button>
-          </div>
         </div>
       </div>
 

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 import { login, register } from "../../services/auth/authServices";
 
-export default function AuthModal({ onClose }) {
+export default function AuthModal({ isOpen, onClose }) {
   const [isLogin, setIsLogin] = useState(true);
 
   const [email, setEmail] = useState("");
@@ -14,23 +14,18 @@ export default function AuthModal({ onClose }) {
     e.preventDefault();
     if (isLogin) {
       try {
-        console.log(username, password);
         const response = await login(username, password);
-        console.log(response);
         if (response) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
           onClose();
-          console.log("logged in");
         }
       } catch (error) {
         console.error("Error logging in:", error);
       }
     } else {
       try {
-        console.log(username, email, password);
         const response = await register(username, email, password);
-        console.log(response);
         if (response) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
@@ -47,6 +42,14 @@ export default function AuthModal({ onClose }) {
       onClose();
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setEmail("");
+      setPassword("");
+      setUsername("");
+    };
+  }, []);
 
   return (
     <div
@@ -103,7 +106,7 @@ export default function AuthModal({ onClose }) {
             <>
               <label className="block text-gray-300 mb-2">Username</label>
               <input
-                type="username"
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"

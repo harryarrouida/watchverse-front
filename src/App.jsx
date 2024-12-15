@@ -22,7 +22,9 @@ function App() {
               <Route path="/shows" element={<Shows />} />
               <Route path="/anime" element={<Anime />} />
               <Route path="/track" element={<Track />} />
-            </Routes>
+              <Route path="/settings" element={<div>Settings coming soon</div>} />
+              <Route path="/profile" element={<div>Profile coming soon</div>} />
+            </Routes> 
           </main>
           <Footer />
         </div>

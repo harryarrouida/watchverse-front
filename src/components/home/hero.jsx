@@ -8,6 +8,8 @@ import LazyImage from "../common/LazyImage";
 
 import { MdOutlineLogin, MdOutlineHail } from "react-icons/md";
 
+import { useAuth } from "../../contexts/AuthContext";
+
 export default function Hero() {
   const [content, setContent] = useState(null);
   const [allContent, setAllContent] = useState([]);
@@ -16,8 +18,7 @@ export default function Hero() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const {isLoggedIn} = useAuth()
 
   useEffect(() => {
     const fetchTrendingContent = async () => {
@@ -71,10 +72,10 @@ export default function Hero() {
     setIsAuthModalOpen(!isAuthModalOpen);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-  }, [isAuthModalOpen]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   setToken(token);
+  // }, [isAuthModalOpen]);
 
   if (!content) return null;
 
@@ -112,7 +113,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex items-center">
-          {token ? (
+          {isLoggedIn ? (
             <button className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
               <MdOutlineHail size={24} />
             </button>

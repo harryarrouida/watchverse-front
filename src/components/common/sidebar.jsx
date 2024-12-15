@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
   MdOutlineHome,
@@ -19,13 +19,15 @@ import {
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const { logoutUser, isLoggedIn } = useAuth();
+
   const handleLogout = () => {
     console.log("logout");
-    localStorage.removeItem("token");
-    setToken(null);
+    logoutUser();
     navigate("/");
   };
+
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-[300px] bg-black text-white p-2">
       <nav className="flex flex-col space-y-2">
@@ -97,7 +99,7 @@ const Sidebar = () => {
           </div>
 
           <div className="mt-auto space-y-2">
-            {token ? (
+            {isLoggedIn ? (
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-3 p-2 rounded"

@@ -6,14 +6,12 @@ import Movies from "./pages/public/Movies";
 import Shows from "./pages/public/Shows";
 import Anime from "./pages/public/Anime";
 import Track from "./pages/private/Track";
-import { FavoritesProvider } from './contexts/FavoritesContext';
-import { TrackProvider } from './contexts/TrackContext';
+import { AppProvider } from "./contexts/AppProvider";
 
 function App() {
   return (
-    <TrackProvider>
-      <FavoritesProvider>
-        <div className="min-h-screen bg-black p-2">
+    <AppProvider>
+      <div className="min-h-screen bg-black p-2">
           <Sidebar />
           <main className="ml-[300px]">
             <Routes> 
@@ -28,8 +26,7 @@ function App() {
           </main>
           <Footer />
         </div>
-      </FavoritesProvider>
-    </TrackProvider>
+      </AppProvider>
   );
 }
 

@@ -16,6 +16,11 @@ export function TrackProvider({ children }) {
   const [error, setError] = useState(null);
 
   const updateTrackLists = async () => {
+    if (!localStorage.getItem("token")) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const watchingData = await getByStatus("watching");
       const watchedData = await getByStatus("watched");
@@ -26,11 +31,11 @@ export function TrackProvider({ children }) {
       if (Array.isArray(toWatchData)) setToWatch(toWatchData);
 
       setError(null);
-    } catch (err) {
-      console.error("Error updating track lists:", err);
+    } catch (error) {
+      console.error('Error updating track lists:', error);
       setError("Failed to update lists");
-    }finally{
-        setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,6 +44,8 @@ export function TrackProvider({ children }) {
   }, [watching, watched, toWatch]);
 
   const handleAddWithCustomStatus = async (show, status) => {
+    if (!localStorage.getItem("token")) return null;
+    
     try {
       setLoading(true);
       console.log("show, status from handleAddWithCustomStatus", show, status);
@@ -57,6 +64,8 @@ export function TrackProvider({ children }) {
   };
 
   const handleUpdateStatus = async (id, newStatus) => {
+    if (!localStorage.getItem("token")) return null;
+    
     console.log("id from handleUpdateStatus", id);
     console.log("newStatus from handleUpdateStatus", newStatus);
     try {
@@ -75,6 +84,8 @@ export function TrackProvider({ children }) {
   };
 
   const handleUpdateStatusByTmdbId = async (tmdbId, newStatus) => {
+    if (!localStorage.getItem("token")) return null;
+    
     try {
       console.log("tmdbId, newStatus from handleUpdateStatusByTmdbId context file", tmdbId, newStatus);
       const response = await updateStatusByTmdbId(tmdbId, newStatus);

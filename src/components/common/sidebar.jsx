@@ -1,33 +1,50 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
-  AiFillHome,
-  AiOutlineSearch,
-  AiOutlineHistory,
-  AiOutlineSetting,
-  AiOutlineVideoCamera,
-} from "react-icons/ai";
-import { BiMoviePlay } from "react-icons/bi"; 
-import { MdFavorite, MdLocalMovies } from "react-icons/md";
-import { BsBookmarkHeart } from "react-icons/bs";
+  MdOutlineHome,
+  MdOutlineSearch,
+  MdOutlineHistory,
+  MdOutlineSettings,
+  MdOutlineMovie,
+  MdOutlineLiveTv,
+  MdOutlineVideoLibrary,
+  MdOutlineFavorite,
+  MdOutlinePlaylistPlay,
+  MdOutlinePerson,
+  MdOutlineLogout,
+  MdOutlineLogin,
+} from "react-icons/md";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const { logoutUser, isLoggedIn } = useAuth();
+
+  const handleLogout = () => {
+    console.log("logout");
+    logoutUser();
+    navigate("/");
+  };
+
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-[300px] bg-black text-white p-2">
       <nav className="flex flex-col space-y-2">
         {/* Top Section */}
         <div className="space-y-2 bg-[#121212] rounded-lg p-2">
           <Link to="/" className="flex items-center space-x-3 p-2 rounded">
-            <AiFillHome size={24} />
+            <MdOutlineHome size={24} />
             <span>Home</span>
           </Link>
           <Link
             to="/profile"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <AiOutlineSearch size={24} />
-            <span>Profile</span>
+            <MdOutlinePerson size={24} />
+            <span>Profile (coming soon)</span>
           </Link>
+          
         </div>
 
         {/* Main Navigation */}
@@ -36,21 +53,21 @@ const Sidebar = () => {
             to="/movies"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <MdLocalMovies size={24} />
+            <MdOutlineMovie size={24} />
             <span>Movies</span>
           </Link>
           <Link
             to="/shows"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <AiOutlineSearch size={24} />
+            <MdOutlineLiveTv size={24} />
             <span>Shows</span>
           </Link>
           <Link
             to="/anime"
             className="flex items-center space-x-3 p-2 rounded"
           >
-            <AiOutlineVideoCamera size={24} />
+            <MdOutlineVideoLibrary size={24} />
             <span>Anime</span>
           </Link>
         </div>
@@ -62,40 +79,42 @@ const Sidebar = () => {
               to="/track"
               className="flex items-center space-x-3 p-2 rounded"
             >
-              <MdFavorite size={24} />
+              <MdOutlinePlaylistPlay size={24} />
               <span>Track</span>
-            </Link>
-            <Link
-              to="/favorites"
-              className="flex items-center space-x-3 p-2 rounded"
-            >
-              <MdFavorite size={24} />
-              <span>test</span>
-            </Link>
-          </div>
-
-          <div className="mt-auto space-y-2">
-            <Link
-              to="/history"
-              className="flex items-center space-x-3 p-2 rounded"
-            >
-              <AiOutlineHistory size={24} />
-              <span>History</span>
-            </Link>
-            <Link
-              to="/watchlist"
-              className="flex items-center space-x-3 p-2 rounded"
-            >
-              <BiMoviePlay size={24} />
-              <span>WatchList</span>
             </Link>
             <Link
               to="/settings"
               className="flex items-center space-x-3 p-2 rounded"
             >
-              <AiOutlineSetting size={24} />
+              <MdOutlineSettings size={24} />
               <span>Settings</span>
             </Link>
+            <Link
+              to="/favorites"
+              className="flex items-center space-x-3 p-2 rounded"
+            >
+              <MdOutlineFavorite size={24} />
+              <span>test</span>
+            </Link>
+          </div>
+
+          <div className="mt-auto space-y-2">
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-3 p-2 rounded"
+              >
+                <MdOutlineLogout size={24} className="text-red-500" />
+                <span className="text-red-500">Logout</span>   
+              </button>
+            ) : 
+              <button
+                className="flex items-center space-x-3 p-2 rounded"
+              >
+                <MdOutlineLogin size={24} />
+                <span>Login</span>
+              </button>
+            }
           </div>
         </div>
       </nav>

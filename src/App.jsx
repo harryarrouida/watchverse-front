@@ -6,14 +6,12 @@ import Movies from "./pages/public/Movies";
 import Shows from "./pages/public/Shows";
 import Anime from "./pages/public/Anime";
 import Track from "./pages/private/Track";
-import { FavoritesProvider } from './contexts/FavoritesContext';
-import { TrackProvider } from './contexts/TrackContext';
+import { AppProvider } from "./contexts/AppProvider";
 
 function App() {
   return (
-    <TrackProvider>
-      <FavoritesProvider>
-        <div className="min-h-screen bg-black p-2">
+    <AppProvider>
+      <div className="min-h-screen bg-black p-2">
           <Sidebar />
           <main className="ml-[300px]">
             <Routes> 
@@ -22,12 +20,13 @@ function App() {
               <Route path="/shows" element={<Shows />} />
               <Route path="/anime" element={<Anime />} />
               <Route path="/track" element={<Track />} />
-            </Routes>
+              <Route path="/settings" element={<div>Settings coming soon</div>} />
+              <Route path="/profile" element={<div>Profile coming soon</div>} />
+            </Routes> 
           </main>
           <Footer />
         </div>
-      </FavoritesProvider>
-    </TrackProvider>
+      </AppProvider>
   );
 }
 

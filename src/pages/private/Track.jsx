@@ -8,6 +8,7 @@ const TrackContent = () => {
   const { watching, watched, toWatch, loading, error } = useTrack();
   const { favorites} = useFavorites();
 
+
   if (loading) {
     return (
       <div className="min-h-screen text-white p-8">
@@ -44,13 +45,14 @@ const TrackContent = () => {
 
 const Track = () => {
   if (!localStorage.getItem("token")) {
-    return <Navigate to="/home" />;
+    console.log("no token found from track page");
+    return <Navigate to="/" />;
   }
 
   return (
-    <FavoritesProvider>
-      <TrackContent />
-    </FavoritesProvider>
+      <FavoritesProvider>
+        <TrackContent />
+      </FavoritesProvider>
   );
 };
 

@@ -6,6 +6,10 @@ import { tmdbServices } from "../../services/tmdbServices";
 import SearchModal from "../modals/searchModal";
 import LazyImage from "../common/LazyImage";
 
+import { MdOutlineLogin, MdOutlineHail } from "react-icons/md";
+
+import { useAuth } from "../../contexts/AuthContext";
+
 export default function Hero() {
   const [content, setContent] = useState(null);
   const [allContent, setAllContent] = useState([]);
@@ -14,8 +18,7 @@ export default function Hero() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const {isLoggedIn} = useAuth()
 
   useEffect(() => {
     const fetchTrendingContent = async () => {
@@ -23,7 +26,9 @@ export default function Hero() {
         const data = await tmdbServices.getTrendingAll();
         setAllContent(data.results);
         // Set initial random content
-        setContent(data.results[Math.floor(Math.random() * data.results.length)]);
+        setContent(
+          data.results[Math.floor(Math.random() * data.results.length)]
+        );
       } catch (error) {
         console.error("Error fetching trending content:", error);
       }
@@ -33,7 +38,7 @@ export default function Hero() {
 
     // Set up interval to change content every 10 seconds
     const intervalId = setInterval(() => {
-      if(isAnimating){
+      if (isAnimating) {
         setContent((currentContent) => {
           if (!allContent.length) return currentContent;
           let randomIndex;
@@ -42,7 +47,10 @@ export default function Hero() {
           do {
             randomIndex = Math.floor(Math.random() * allContent.length);
             newContent = allContent[randomIndex];
-          } while (newContent?.id === currentContent?.id && allContent.length > 1);
+          } while (
+            newContent?.id === currentContent?.id &&
+            allContent.length > 1
+          );
           return newContent;
         });
       }
@@ -60,13 +68,14 @@ export default function Hero() {
     );
   }
 
-  if (isAuthModalOpen) {
-    return (
-      <div className="fixed inset-0 bg-black/50 z-50">
-        <AuthModal onClose={() => setIsAuthModalOpen(false)} />
-      </div>
-    );
-  }
+  const handleAuthModal = () => {
+    setIsAuthModalOpen(!isAuthModalOpen);
+  };
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   setToken(token);
+  // }, [isAuthModalOpen]);
 
   if (!content) return null;
 
@@ -74,13 +83,15 @@ export default function Hero() {
     <div className="relative h-screen rounded-lg">
       {/* Background Image */}
       <div className="absolute inset-0 rounded-lg">
-        {content ? <LazyImage
-          src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
-          alt={content.title || content.name}
-          className="w-full h-full object-cover opacity-40 rounded-lg"
-          loading="lazy"
-          show={content}
-        /> : null}
+        {content ? (
+          <LazyImage
+            src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
+            alt={content.title || content.name}
+            className="w-full h-full object-cover opacity-40 rounded-lg"
+            loading="lazy"
+            show={content}
+          />
+        ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
       </div>
 
@@ -102,13 +113,16 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex items-center">
-          {token ? (
+          {isLoggedIn ? (
             <button className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
-              <AiOutlineUser size={24} />
+              <MdOutlineHail size={24} />
             </button>
           ) : (
-            <button onClick={() => setIsAuthModalOpen(true)} className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2">
-              <AiOutlineUser size={24} />
+            <button
+              onClick={handleAuthModal}
+              className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2"
+            >
+              <MdOutlineLogin size={24} className="text-indigo-500" />
             </button>
           )}
         </div>
@@ -117,7 +131,9 @@ export default function Hero() {
       {/* Hero Content */}
       <div className="relative h-[calc(100%-80px)] flex items-center px-12">
         <div className="w-2/3 space-y-6">
-          <h1 className="text-6xl font-bold text-white">{content.title || content.name}</h1>
+          <h1 className="text-6xl font-bold text-white">
+            {content.title || content.name}
+          </h1>
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-xl font-semibold">
               ★ {content.vote_average.toFixed(1)}
@@ -139,6 +155,10 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {isAuthModalOpen && (
+        <AuthModal isOpen={isAuthModalOpen} onClose={handleAuthModal} />
+      )}
     </div>
   );
 }

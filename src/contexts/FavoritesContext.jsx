@@ -26,6 +26,8 @@ export function FavoritesProvider({ children }) {
   };
 
   const handleAddFavorite = async (favorite) => {
+    if (!localStorage.getItem("token")) return null;
+    
     console.log("favorite from handleAddFavorite", favorite);
     await addFavorite(favorite);
     await updateFavorites();
@@ -33,12 +35,14 @@ export function FavoritesProvider({ children }) {
   };
 
   const handleRemoveFavorite = async (id) => {
+    if (!localStorage.getItem("token")) return null;
     console.log("favoriteId from handleRemoveFavorite", id);
     await removeFavorite(id);
     await updateFavorites();
   };
 
   const handleRemoveFavoriteByTmdbId = async (tmdbId) => {
+    if (!localStorage.getItem("token")) return null;
     console.log("tmdbId from handleRemoveFavoriteByTmdbId", tmdbId);
     await removeFavoriteByTmdbId(tmdbId);
     await updateFavorites();

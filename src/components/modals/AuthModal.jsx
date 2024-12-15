@@ -1,44 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import { useAuth } from "../../contexts/AuthContext";
 
-import { login, register } from "../../services/auth/authServices";
-
-export default function AuthModal({ onClose }) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ isOpen, onClose }) {
+  const { loginUser, registerUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      try {
-        console.log(username, password);
-        const response = await login(username, password);
-        console.log(response);
-        if (response) {
-          localStorage.setItem("token", response.token);
-          localStorage.setItem("user", JSON.stringify(response.user));
-          onClose();
-          console.log("logged in");
-        }
-      } catch (error) {
-        console.error("Error logging in:", error);
+    setError("");
+
+    try {
+      if (isLogin) {
+        console.log("logging in", email, password);
+        await loginUser(email, password);
+      } else {
+        console.log("registering", username, email, password);
+        await registerUser(username, email, password);
       }
-    } else {
-      try {
-        console.log(username, email, password);
-        const response = await register(username, email, password);
-        console.log(response);
-        if (response) {
-          localStorage.setItem("token", response.token);
-          localStorage.setItem("user", JSON.stringify(response.user));
-          onClose();
-        }
-      } catch (error) {
-        console.error("Error registering:", error);
-      }
+      onClose();
+    } catch (error) {
+      console.error("Auth error:", error);
+      setError(error.message || "An error occurred during authentication");
     }
   };
 
@@ -48,6 +36,23 @@ export default function AuthModal({ onClose }) {
     }
   };
 
+  useEffect(() => {
+    const cleanup = () => {
+      setEmail("");
+      setPassword("");
+      setUsername("");
+      setError("");
+    };
+
+    if (!isOpen) {
+      cleanup();
+    }
+
+    return cleanup;
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
@@ -55,7 +60,7 @@ export default function AuthModal({ onClose }) {
       onKeyDown={handleModalClose}
       tabIndex={0}
     >
-      <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg w-96 relative">
+      <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg w-96 relative" onClick={e => e.stopPropagation()}>
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white"
@@ -67,8 +72,13 @@ export default function AuthModal({ onClose }) {
           {isLogin ? "Login" : "Sign Up"}
         </h2>
 
+        {error && (
+          <div className="bg-red-500/20 border border-red-500 text-red-100 px-4 py-2 rounded mb-4">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* signup */}
           {!isLogin && (
             <>
               <label className="block text-gray-300 mb-2">Username</label>
@@ -79,47 +89,26 @@ export default function AuthModal({ onClose }) {
                 className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
                 required
               />
-              <label className="block text-gray-300 mb-2">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-              <label className="block text-gray-300 mb-2">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
             </>
           )}
 
-          {/* login */}
-          {isLogin && (
-            <>
-              <label className="block text-gray-300 mb-2">Username</label>
-              <input
-                type="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
+          <label className="block text-gray-300 mb-2">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            required
+          />
 
-              <label className="block text-gray-300 mb-2">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-            </>
-          )}
+          <label className="block text-gray-300 mb-2">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-white/10 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            required
+          />
 
           <button
             type="submit"

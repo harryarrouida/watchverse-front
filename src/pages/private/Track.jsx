@@ -8,8 +8,6 @@ const TrackContent = () => {
   const { watching, watched, toWatch, loading, error } = useTrack();
   const { favorites} = useFavorites();
 
-  console.log("watching, watched, toWatch from TrackContent", watching, watched, toWatch);
-
   if (loading) {
     return (
       <div className="min-h-screen text-white p-8">

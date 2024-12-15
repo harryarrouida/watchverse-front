@@ -41,8 +41,7 @@ export function TrackProvider({ children }) {
   const handleAddWithCustomStatus = async (show, status) => {
     try {
       setLoading(true);
-      console.log("show from handleAddWithCustomStatus", show);
-      console.log("status from handleAddWithCustomStatus", status);
+      console.log("show, status from handleAddWithCustomStatus", show, status);
       const response = await addWithCustomStatus(show, status);
       if (response) {
         await updateTrackLists(); // Refresh all lists after adding

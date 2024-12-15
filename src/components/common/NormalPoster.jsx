@@ -6,8 +6,8 @@ import { useTrack } from "../../contexts/TrackContext";
 
 export default function NormalPoster({ show, showHeart = true, title = ""}) {
   const [showPopup, setShowPopup] = useState(false);
-  const { handleAddFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
-  const { addWithCustomStatus, updateStatus, updateStatusByTmdbId } = useTrack();
+  const { handleAddFavorite, handleRemoveFavoriteByTmdbId, updateFavorites } = useFavorites();
+  const { addWithCustomStatus, updateStatusByTmdbId } = useTrack();
 
   const handleFavoriteClick = async (e) => {
     console.log("show from handleFavoriteClick", show);
@@ -20,14 +20,14 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
   };
 
   const handleStatusClick = async (show, newStatus) => {
-    console.log("show from handleStatusClick", show);
-    console.log("newStatus from handleStatusClick", newStatus);
+    console.log("show, newStatus from handleStatusClick", show, newStatus);
     if (show.status) {
       await updateStatusByTmdbId(show.id || show.tmdbId, newStatus);
     } else {
       await addWithCustomStatus(show, newStatus);
     }
     setShowPopup(false);
+    await updateFavorites();
   };
 
   const getStatusIcon = () => {

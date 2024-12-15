@@ -34,6 +34,7 @@ const Poster = ({ item, index, showRank = false }) => {
           src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
           alt={title}
           className="w-full h-full object-cover"
+          show={item}
         />
       </div>
 

@@ -24,7 +24,7 @@ export default function BestByCategory() {
       <div className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
         {content.map((item, index) => (
           <div 
-            key={item.id}
+            key={item.id || item._id}
             className={`absolute inset-0 transition-opacity duration-300 ${
               index === content.findIndex(i => i.id === item.id) ? 'opacity-100' : 'opacity-0'
             }`}

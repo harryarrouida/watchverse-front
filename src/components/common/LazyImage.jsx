@@ -15,7 +15,7 @@ const LazyImage = ({ src, alt, className, show }) => {
 
     return (
         <img
-            key={show._id}
+            key={show._id || show.id}
             src={imageSrc}
             alt={alt}
             className={`${className} ${isLoading ? 'opacity-50' : 'opacity-100'}`}

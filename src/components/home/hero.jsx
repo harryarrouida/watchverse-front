@@ -9,6 +9,9 @@ import LazyImage from "../common/LazyImage";
 import { MdOutlineLogin, MdOutlineHail } from "react-icons/md";
 
 import { useAuth } from "../../contexts/AuthContext";
+import { setWithExpiry, getWithExpiry, CACHE_KEYS } from '../../utils/cacheUtils';
+import { useFavorites } from '../../contexts/FavoritesContext';
+import { useTrack } from '../../contexts/TrackContext';
 
 export default function Hero() {
   const [content, setContent] = useState(null);
@@ -17,23 +20,48 @@ export default function Hero() {
   const [isAnimating, setIsAnimating] = useState(true); // Set to true by default
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { isLoggedIn } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const { favorites } = useFavorites();
+  const { tracks } = useTrack();
 
   useEffect(() => {
-    const fetchTrendingContent = async () => {
+    const fetchHeroShow = async () => {
+      setLoading(true);
       try {
+        // Check cache first
+        const cachedShow = getWithExpiry(CACHE_KEYS.HERO_SHOW);
+        
+        if (cachedShow) {
+          console.log('🚀 Using cached hero show:', cachedShow);
+          console.log('⏰ Cache timestamp:', new Date(JSON.parse(localStorage.getItem(CACHE_KEYS.HERO_SHOW)).timestamp));
+          setAllContent(cachedShow);
+          // Set initial random content
+          const initialContent = cachedShow[Math.floor(Math.random() * cachedShow.length)];
+          setContent(initialContent);
+          setLoading(false);
+          return;
+        }
+
+        console.log('🔄 Cache miss - fetching from API...');
+        
+        // If no cache, fetch from API
         const data = await tmdbServices.getTrendingAll();
         if (data?.results && Array.isArray(data.results)) {
           setAllContent(data.results);
           // Set initial random content
           const initialContent = data.results[Math.floor(Math.random() * data.results.length)];
           setContent(initialContent);
+
+          // Store in cache
+          setWithExpiry(CACHE_KEYS.HERO_SHOW, data.results);
         }
       } catch (error) {
-        console.error("Error fetching trending content:", error);
+        console.error('Error fetching hero show:', error);
       }
+      setLoading(false);
     };
 
-    fetchTrendingContent();
+    fetchHeroShow();
 
     // Set up interval to change content every 10 seconds
     const intervalId = setInterval(() => {
@@ -50,7 +78,7 @@ export default function Hero() {
           return availableContent[randomIndex];
         });
       }
-    }, 10000);
+    }, 60000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
@@ -68,18 +96,29 @@ export default function Hero() {
     setIsAuthModalOpen(!isAuthModalOpen);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (!content || !content.backdrop_path) return null;
+
+  // Merge with user-specific data
+  const processedContent = {
+    ...content,
+    is_favorite: favorites.some(fav => fav.tmdbId === content.id),
+    status: tracks.find(track => track.tmdbId === content.id)?.status
+  };
 
   return (
     <div className="relative h-screen rounded-lg">
       {/* Background Image */}
       <div className="absolute inset-0 rounded-lg">
         <LazyImage
-          src={`https://image.tmdb.org/t/p/original${content.backdrop_path}`}
-          alt={content.title || content.name}
+          src={`https://image.tmdb.org/t/p/original${processedContent.backdrop_path}`}
+          alt={processedContent.title || processedContent.name}
           className="w-full h-full object-cover opacity-40 rounded-lg"
           loading="lazy"
-          show={content}
+          show={processedContent}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent rounded-lg" />
       </div>
@@ -121,21 +160,21 @@ export default function Hero() {
       <div className="relative h-[calc(100%-80px)] flex items-center px-12">
         <div className="w-2/3 space-y-6">
           <h1 className="text-6xl font-bold text-white">
-            {content.title || content.name}
+            {processedContent.title || processedContent.name}
           </h1>
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-xl font-semibold">
-              ★ {content.vote_average?.toFixed(1)}
+              ★ {processedContent.vote_average?.toFixed(1)}
             </span>
             <span className="text-gray-300">
-              Release: {content.release_date || content.first_air_date}
+              Release: {processedContent.release_date || processedContent.first_air_date}
             </span>
             <span className="text-gray-300">
-              {content.media_type === 'movie' ? 'Movie' : 'TV Series'}
+              {processedContent.media_type === 'movie' ? 'Movie' : 'TV Series'}
             </span>
           </div>
           <p className="text-gray-300 text-lg max-w-2xl line-clamp-3">
-            {content.overview}
+            {processedContent.overview}
           </p>
         </div>
       </div>

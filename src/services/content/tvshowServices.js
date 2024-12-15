@@ -1,5 +1,5 @@
 import { TMDB_BASE_URL, API_KEY } from '../config';
-import { cacheManager } from '../../utils/cacheUtils';
+// import { cacheManager } from '../../utils/cacheUtils';
 
 export const tvShowServices = {
     getPopularTvShows: async (page = 1) => {

@@ -95,6 +95,7 @@ export const getByStatus = async (status) => {
   }
 };
 
+// working
 export const updateStatusByTmdbId = async (tmdbId, newStatus) => {
   if (!localStorage.getItem("token")) {
     return [];

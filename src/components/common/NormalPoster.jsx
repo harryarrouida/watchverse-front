@@ -62,7 +62,7 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
     >
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
         <span className="text-yellow-400">★</span>
-        <span className="text-white text-sm">{show.vote_average.toFixed(1)}</span>
+        <span className="text-white text-sm">{show.vote_average?.toFixed(1)}</span>
       </div>
 
       {showLoginPrompt && (

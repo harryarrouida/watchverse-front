@@ -5,7 +5,7 @@ import { useFavorites } from "../../contexts/FavoritesContext";
 import EmptyPoster from "./EmptyPoster";
 import { useTrack } from "../../contexts/TrackContext";
 
-const NormalRow = ({ title, content = [], animate = false, showHeart = true }) => {
+const NormalRow = ({ title, content = [], showHeart = true }) => {
   const { favorites } = useFavorites();
   const { tracks } = useTrack();
 

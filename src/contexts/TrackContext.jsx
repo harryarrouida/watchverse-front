@@ -3,6 +3,7 @@ import {
   getByStatus,
   addWithCustomStatus,
   updateStatus,
+  updateStatusByTmdbId
 } from "../services/tracker/trackerServices";
 
 const TrackContext = createContext();
@@ -32,6 +33,10 @@ export function TrackProvider({ children }) {
         setLoading(false);
     }
   };
+
+  useEffect(() => {
+    updateTrackLists();
+  }, [watching, watched, toWatch]);
 
   const handleAddWithCustomStatus = async (show, status) => {
     try {
@@ -70,6 +75,18 @@ export function TrackProvider({ children }) {
     }
   };
 
+  const handleUpdateStatusByTmdbId = async (tmdbId, newStatus) => {
+    try {
+      console.log("tmdbId, newStatus from handleUpdateStatusByTmdbId context file", tmdbId, newStatus);
+      const response = await updateStatusByTmdbId(tmdbId, newStatus);
+      return response;
+    } catch (err) {
+      console.error("Error updating show status by tmdbId:", err);
+      setError("Failed to update status");
+      return null;
+    }
+  };
+
   // Initial fetch of data
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -89,9 +106,11 @@ export function TrackProvider({ children }) {
     updateTrackLists,
     addWithCustomStatus: handleAddWithCustomStatus,
     updateStatus: handleUpdateStatus,
+    updateStatusByTmdbId: handleUpdateStatusByTmdbId,
     setWatching,
     setWatched,
-    setToWatch
+    setToWatch,
+    tracks: [...watching, ...watched, ...toWatch]
   };
 
   return (

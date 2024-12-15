@@ -3,9 +3,11 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import NormalPoster from "./NormalPoster";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import EmptyPoster from "./EmptyPoster";
+import { useTrack } from "../../contexts/TrackContext";
 
 const NormalRow = ({ title, content = [], animate = false, showHeart = true }) => {
   const { favorites } = useFavorites();
+  const { tracks } = useTrack();
 
   const [position, setPosition] = useState(0);
   const rowRef = useRef(null);
@@ -15,6 +17,7 @@ const NormalRow = ({ title, content = [], animate = false, showHeart = true }) =
   const processedContent = useMemo(() => {
     let currentContent = content;
 
+    // explaining: this is for the favorites row
     if (title === "favorites") {
       return content.map((item) => ({
         ...item,
@@ -25,8 +28,9 @@ const NormalRow = ({ title, content = [], animate = false, showHeart = true }) =
     return currentContent.map((item) => ({
       ...item,
       is_favorite: favorites.some((fav) => fav.tmdbId === item.id),
+      status : item.status ? item.status : tracks.find(track => track.tmdbId === item.id)?.status
     }));
-  }, [content, favorites, title]);
+  }, [content, favorites, tracks, title]);
 
   // animation handler
   // useEffect(() => {
@@ -83,7 +87,7 @@ const NormalRow = ({ title, content = [], animate = false, showHeart = true }) =
               (item) =>
                 item && (
                   <div key={item.id || item._id}>
-                    <NormalPoster show={item} showHeart={showHeart} />
+                    <NormalPoster show={item} showHeart={showHeart} title={title} />
                   </div>
                 )
             )}

@@ -4,12 +4,13 @@ import { MdFavorite, MdFavoriteBorder, MdAdd, MdPlayArrow, MdDone, MdWatchLater 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useTrack } from "../../contexts/TrackContext";
 
-export default function NormalPoster({ show, showHeart = true}) {
+export default function NormalPoster({ show, showHeart = true, title = ""}) {
   const [showPopup, setShowPopup] = useState(false);
-  const { handleAddFavorite, handleRemoveFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
-  const { addWithCustomStatus, updateStatus } = useTrack();
+  const { handleAddFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
+  const { addWithCustomStatus, updateStatus, updateStatusByTmdbId } = useTrack();
 
   const handleFavoriteClick = async (e) => {
+    console.log("show from handleFavoriteClick", show);
     e.stopPropagation();
     if (show.is_favorite === true) {
       await handleRemoveFavoriteByTmdbId(show.id || show.tmdbId);
@@ -19,8 +20,10 @@ export default function NormalPoster({ show, showHeart = true}) {
   };
 
   const handleStatusClick = async (show, newStatus) => {
+    console.log("show from handleStatusClick", show);
+    console.log("newStatus from handleStatusClick", newStatus);
     if (show.status) {
-      await updateStatus(show._id, newStatus);
+      await updateStatusByTmdbId(show.id || show.tmdbId, newStatus);
     } else {
       await addWithCustomStatus(show, newStatus);
     }
@@ -40,9 +43,6 @@ export default function NormalPoster({ show, showHeart = true}) {
         return <MdAdd size={20} />;
     }
   };
-
-  // Don't render if it's in "to watch" row and has "to watch" status
-  // if (show.status === "to watch" && title === "to watch") return null;
 
   return (
     <div
@@ -69,27 +69,39 @@ export default function NormalPoster({ show, showHeart = true}) {
 
         {showPopup && (
           <div className="absolute right-0 mt-2 w-32 bg-black/90 backdrop-blur-sm rounded-md shadow-lg overflow-hidden">
-            <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => handleStatusClick(show, "watching")}
-            >
-              <MdPlayArrow size={16} /> Watching
-            </button>
-            <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => handleStatusClick(show, "watched")}
-            >
-              <MdDone size={16} /> Watched
-            </button>
-            <button
-              className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
-              onMouseDown={(e) => e.preventDefault()}
+            {
+              title !== "watching" && (
+                <button
+                  className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={(e) => handleStatusClick(show, "watching")}
+                >
+                  <MdPlayArrow size={16} /> Watching
+                </button>
+              )
+            }
+            {
+              title !== "to watch" && (
+                <button
+                  className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
+                  onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => handleStatusClick(show, "to watch")}
             >
-              <MdWatchLater size={16} /> To Watch
-            </button>
+                  <MdWatchLater size={16} /> To Watch
+                </button>
+              )
+            }
+            {
+              title !== "watched" && (
+                <button
+                  className="w-full text-white text-sm py-2 px-4 hover:bg-gray-700 text-left flex items-center gap-2"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={(e) => handleStatusClick(show, "watched")}
+                >
+                  <MdDone size={16} /> Watched
+                </button>
+              )
+            }
           </div>
         )}
       </div>

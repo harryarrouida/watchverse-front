@@ -95,6 +95,23 @@ export const getByStatus = async (status) => {
   }
 };
 
+export const updateStatusByTmdbId = async (tmdbId, newStatus) => {
+  if (!localStorage.getItem("token")) {
+    return [];
+  }
+  try {
+    const response = await axios.put(`${API_URL}/track/status/tmdb/${tmdbId}`, { newStatus }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating status by tmdbId:", error);
+    throw error;
+  }
+};
+
 export const updateStatus = async (id, newStatus) => {
   if (!localStorage.getItem("token")) {
     return [];
@@ -147,4 +164,5 @@ export const addWithCustomStatus = async (show, status) => {
     console.error("Error adding with custom status:", error);
     throw error;
   }
+
 };

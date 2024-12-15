@@ -4,8 +4,6 @@ import { useAuth } from "../../contexts/AuthContext";
 
 import {
   MdOutlineHome,
-  MdOutlineSearch,
-  MdOutlineHistory,
   MdOutlineSettings,
   MdOutlineMovie,
   MdOutlineLiveTv,
@@ -27,10 +25,9 @@ const Sidebar = () => {
     navigate("/");
   };
 
-
   return (
     <aside className="fixed left-0 top-0 h-screen w-[300px] bg-black text-white p-2">
-      <nav className="flex flex-col space-y-2">
+      <nav className="flex flex-col h-full">
         {/* Top Section */}
         <div className="space-y-2 bg-[#121212] rounded-lg p-2">
           <Link to="/" className="flex items-center space-x-3 p-2 rounded">
@@ -44,11 +41,10 @@ const Sidebar = () => {
             <MdOutlinePerson size={24} />
             <span>Profile (coming soon)</span>
           </Link>
-          
         </div>
 
         {/* Main Navigation */}
-        <div className="space-y-2 pb-4 bg-[#121212] rounded-lg p-2">
+        <div className="space-y-2 mt-2 bg-[#121212] rounded-lg p-2">
           <Link
             to="/movies"
             className="flex items-center space-x-3 p-2 rounded"
@@ -73,7 +69,7 @@ const Sidebar = () => {
         </div>
 
         {/* Personal Lists and Bottom Section */}
-        <div className="flex flex-col justify-between h-full bg-[#121212] rounded-lg p-2 gap-y-56">
+        <div className="flex-1 flex flex-col mt-2 bg-[#121212] rounded-lg p-2">
           <div className="space-y-2">
             <Link
               to="/track"
@@ -98,18 +94,18 @@ const Sidebar = () => {
             </Link>
           </div>
 
-          <div className="mt-auto space-y-2">
+          <div className="mt-auto">
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-3 p-2 rounded"
+                className="flex items-center space-x-3 p-2 rounded w-full"
               >
                 <MdOutlineLogout size={24} className="text-red-500" />
                 <span className="text-red-500">Logout</span>   
               </button>
             ) : 
               <button
-                className="flex items-center space-x-3 p-2 rounded"
+                className="flex items-center space-x-3 p-2 rounded w-full"
               >
                 <MdOutlineLogin size={24} />
                 <span>Login</span>

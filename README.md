@@ -5,11 +5,13 @@ WatchVerse is a modern web application for tracking and discovering movies, TV s
 ## Showcase ✨
 
 <div align="center">
-  <img src="./public/image.png" alt="WatchVerse" />
-</div>
-<div align="center">
   <img src="./public/image1.png" alt="WatchVerse" />
 </div>
+##
+<div align="center">
+  <img src="./public/image.png" alt="WatchVerse" />
+</div>
+##
 <div align="center">
   <img src="./public/image2.png" alt="WatchVerse" />
 </div>

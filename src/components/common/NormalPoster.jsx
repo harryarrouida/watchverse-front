@@ -4,13 +4,26 @@ import { MdFavorite, MdFavoriteBorder, MdAdd, MdPlayArrow, MdDone, MdWatchLater 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useTrack } from "../../contexts/TrackContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { tmdbServices } from "../../services/tmdbServices";
 
 export default function NormalPoster({ show, showHeart = true, title = ""}) {
   const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { handleAddFavorite, handleRemoveFavoriteByTmdbId, updateFavorites } = useFavorites();
   const { addWithCustomStatus, updateStatusByTmdbId } = useTrack();
+
+  const handlePosterClick = async () => {
+    try {
+      const details = await tmdbServices.getContentDetails(show.id || show.tmdbId, show.media_type || "tv");
+      navigate(`/show-details/${show.id || show.tmdbId}/${show.media_type || "tv"}?title=${show.title || show.name}`, { state: { details } });
+    } catch (error) {
+      console.error('Error fetching show details:', error);
+      // You might want to show an error message to the user here
+    }
+  };
 
   const handleFavoriteClick = async (e) => {
     e.stopPropagation();
@@ -57,7 +70,7 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
 
   return (
     <div
-      key={show.id}
+      onClick={handlePosterClick}
       className="min-w-[180px] max-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300 group"
     >
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">

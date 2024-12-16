@@ -1,12 +1,13 @@
-import Sidebar from "./components/common/sidebar";
 import { Routes, Route } from "react-router-dom";
+import { AppProvider } from "./contexts/AppProvider";
+import Sidebar from "./components/common/sidebar";
 import Home from "./pages/public/home";
 import Footer from "./components/common/footer";
 import Movies from "./pages/public/Movies";
 import Shows from "./pages/public/Shows";
 import Anime from "./pages/public/Anime";
 import Track from "./pages/private/Track";
-import { AppProvider } from "./contexts/AppProvider";
+import ShowDetails from "./pages/public/ShowDetails";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/track" element={<Track />} />
               <Route path="/settings" element={<div>Settings coming soon</div>} />
               <Route path="/profile" element={<div>Profile coming soon</div>} />
+              <Route path="/show-details/:id/:contentType" element={<ShowDetails />} />
             </Routes> 
           </main>
           <Footer />

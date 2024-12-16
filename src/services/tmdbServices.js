@@ -36,7 +36,36 @@ export const tmdbServices = {
             console.error('Error searching content:', error);
             throw error;
         }
-    }
+    },
+    
+    // get content details by ID and type
+    getContentDetails: async (id, type) => {
+        try {
+            if (!['movie', 'tv'].includes(type)) {
+                throw new Error('Invalid content type. Must be either "movie" or "tv"');
+            }
+            
+            const response = await fetch(
+                `${TMDB_BASE_URL}/${type}/${id}?api_key=${API_KEY}`
+            );
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching content details:', error);
+            throw error;
+        }
+    },
+
+    // get similar content
+    getSimilarContent: async (id, type) => {
+        try {
+            const response = await fetch(`${TMDB_BASE_URL}/${type}/${id}/similar?api_key=${API_KEY}`);
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching similar content:', error);
+            throw error;
+        }
+    },
+
 };
 
 export default tmdbServices;

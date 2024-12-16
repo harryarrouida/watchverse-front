@@ -150,7 +150,7 @@ export default function Hero() {
               onClick={handleAuthModal}
               className="text-white hover:text-gray-300 bg-gray-700/30 backdrop-blur-sm rounded-full p-2"
             >
-              <MdOutlineLogin size={24} className="text-indigo-500" />
+              <MdOutlineLogin size={24} className="text-white" />
             </button>
           )}
         </div>

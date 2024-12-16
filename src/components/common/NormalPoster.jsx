@@ -1,26 +1,42 @@
 import { useState, useEffect } from "react";
 import LazyImage from "./LazyImage";
-import { MdFavorite, MdFavoriteBorder, MdAdd, MdPlayArrow, MdDone, MdWatchLater } from "react-icons/md";
+import {
+  MdFavorite,
+  MdFavoriteBorder,
+  MdAdd,
+  MdPlayArrow,
+  MdDone,
+  MdWatchLater,
+} from "react-icons/md";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useTrack } from "../../contexts/TrackContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { tmdbServices } from "../../services/tmdbServices";
 
-export default function NormalPoster({ show, showHeart = true, title = ""}) {
+export default function NormalPoster({ show, showHeart = true, title = "" }) {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const { handleAddFavorite, handleRemoveFavoriteByTmdbId, updateFavorites } = useFavorites();
+  const { handleAddFavorite, handleRemoveFavoriteByTmdbId, updateFavorites } =
+    useFavorites();
   const { addWithCustomStatus, updateStatusByTmdbId } = useTrack();
 
   const handlePosterClick = async () => {
     try {
-      const details = await tmdbServices.getContentDetails(show.id || show.tmdbId, show.media_type || "tv");
-      navigate(`/show-details/${show.id || show.tmdbId}/${show.media_type || "tv"}?title=${show.title || show.name}`, { state: { details } });
+      const details = await tmdbServices.getContentDetails(
+        show.id || show.tmdbId,
+        show.media_type || "tv"
+      );
+      navigate(
+        `/show-details/${show.id || show.tmdbId}/${
+          show.media_type || "tv"
+        }?title=${show.title || show.name}`,
+        { state: { details } }
+      );
     } catch (error) {
-      console.error('Error fetching show details:', error);
+      console.error("Error fetching show details:", error);
       // You might want to show an error message to the user here
     }
   };
@@ -57,11 +73,11 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
   const getStatusIcon = () => {
     if (!show.status) return <MdAdd size={20} />;
     switch (show.status) {
-      case 'watching':
+      case "watching":
         return <MdPlayArrow size={20} />;
-      case 'watched':
+      case "watched":
         return <MdDone size={20} />;
-      case 'to watch':
+      case "to watch":
         return <MdWatchLater size={20} />;
       default:
         return <MdAdd size={20} />;
@@ -69,13 +85,12 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
   };
 
   return (
-    <div
-      onClick={handlePosterClick}
-      className="min-w-[180px] max-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300 group"
-    >
+    <div className="min-w-[180px] max-w-[180px] flex-shrink-0 cursor-pointer px-2 mr-6 relative hover:transform hover:scale-105 transition-all duration-300 group">
       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 z-20">
         <span className="text-yellow-400">★</span>
-        <span className="text-white text-sm">{show.vote_average?.toFixed(1)}</span>
+        <span className="text-white text-sm">
+          {show.vote_average?.toFixed(1)}
+        </span>
       </div>
 
       {showLoginPrompt && (
@@ -87,14 +102,14 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
       <div className="absolute top-3 right-3 z-20">
         <button
           className="bg-black/60 backdrop-blur-sm p-2 rounded-full hover:bg-black/80"
-          onClick={() => isLoggedIn ? setShowPopup(!showPopup) : setShowLoginPrompt(true)}
+          onClick={() =>
+            isLoggedIn ? setShowPopup(!showPopup) : setShowLoginPrompt(true)
+          }
           onBlur={() => {
             setTimeout(() => setShowPopup(false), 3000);
           }}
         >
-          <div className="text-white">
-            {getStatusIcon()}
-          </div>
+          <div className="text-white">{getStatusIcon()}</div>
         </button>
 
         {showPopup && isLoggedIn && (
@@ -130,13 +145,18 @@ export default function NormalPoster({ show, showHeart = true, title = ""}) {
         )}
       </div>
 
-      <LazyImage
-        src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-        alt={show.name || show.title}
+      <div
         className="w-full h-[270px] object-cover rounded-lg"
-        loading="lazy"
-        show={show}
-      />
+        onClick={handlePosterClick}
+      >
+        <LazyImage
+          src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+          alt={show.name || show.title}
+          className="w-full h-full object-cover rounded-lg"
+          loading="lazy"
+          show={show}
+        />
+      </div>
 
       <div className="flex items-center justify-between mt-2 px-2">
         <div className="text-white text-sm font-bold overflow-hidden line-clamp-1">

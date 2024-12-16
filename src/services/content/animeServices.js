@@ -1,13 +1,23 @@
 import { TMDB_BASE_URL, API_KEY } from '../config';
+import { cacheManager, CACHE_KEYS } from '../../utils/cacheUtils';
 
 export const animeServices = {
 
     getTrendingAnimes: async (page = 1) => {
+        const cacheKey = `${CACHE_KEYS.TRENDING_ANIME}-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/discover/movie?api_key=${API_KEY}&with_keywords=210024&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching trending animes:', error);
             throw error;
@@ -15,11 +25,20 @@ export const animeServices = {
     },
 
     getPopularAnime: async (page = 1) => {
+        const cacheKey = `popular-anime-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/discover/movie?api_key=${API_KEY}&with_keywords=210024&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching popular anime:', error);
             throw error;

@@ -13,10 +13,10 @@ const ShowDetails = () => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  // const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { isLoggedIn } = useAuth();
-  const { handleAddFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
-  const { addWithCustomStatus, updateStatusByTmdbId } = useTrack();
+  // const { handleAddFavorite, handleRemoveFavoriteByTmdbId } = useFavorites();
+  // const { addWithCustomStatus, updateStatusByTmdbId } = useTrack();
 
   const [similarContent, setSimilarContent] = useState([]);
 
@@ -28,9 +28,6 @@ const ShowDetails = () => {
 
         const similarResponse = await tmdbServices.getSimilarContent(id, contentType);
         setSimilarContent(similarResponse.results);
-
-        console.log("content", content);
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -41,31 +38,31 @@ const ShowDetails = () => {
     fetchShowDetails();
   }, [id]);
 
-  const handleFavoriteClick = async () => {
-    if (!isLoggedIn) {
-      setShowLoginPrompt(true);
-      setTimeout(() => setShowLoginPrompt(false), 2000);
-      return;
-    }
-    if (content.is_favorite) {
-      await handleRemoveFavoriteByTmdbId(content.id);
-    } else {
-      await handleAddFavorite(content);
-    }
-  };
+  // const handleFavoriteClick = async () => {
+  //   if (!isLoggedIn) {
+  //     setShowLoginPrompt(true);
+  //     setTimeout(() => setShowLoginPrompt(false), 2000);
+  //     return;
+  //   }
+  //   if (content.is_favorite) {
+  //     await handleRemoveFavoriteByTmdbId(content.id);
+  //   } else {
+  //     await handleAddFavorite(content);
+  //   }
+  // };
 
-  const handleStatusClick = async (newStatus) => {
-    if (!isLoggedIn) {
-      setShowLoginPrompt(true);
-      setTimeout(() => setShowLoginPrompt(false), 2000);
-      return;
-    }
-    if (content.status) {
-      await updateStatusByTmdbId(content.id, newStatus);
-    } else {
-      await addWithCustomStatus(content, newStatus);
-    }
-  };
+  // const handleStatusClick = async (newStatus) => {
+  //   if (!isLoggedIn) {
+  //     setShowLoginPrompt(true);
+  //     setTimeout(() => setShowLoginPrompt(false), 2000);
+  //     return;
+  //   }
+  //   if (content.status) {
+  //     await updateStatusByTmdbId(content.id, newStatus);
+  //   } else {
+  //     await addWithCustomStatus(content, newStatus);
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -121,7 +118,7 @@ const ShowDetails = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="max-w-7xl mx-auto px-8 py-4">
+      {/* <div className="max-w-7xl mx-auto px-8 py-4">
         <div className="flex gap-3">
           <button
             onClick={handleFavoriteClick}
@@ -145,13 +142,13 @@ const ShowDetails = () => {
             Add to Watchlist
           </button>
         </div>
-      </div>
+      </div> */}
 
-      {showLoginPrompt && (
+      {/* {showLoginPrompt && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-black/90 text-white px-6 py-3 rounded-lg backdrop-blur-sm">
           Please login first
         </div>
-      )}
+      )} */}
 
       {/* show similar content */}
       <div className="max-w-7xl mx-auto px-8 py-4">

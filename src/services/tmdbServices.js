@@ -1,15 +1,22 @@
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
+import { TMDB_BASE_URL, API_KEY } from './config';
+import { cacheManager, CACHE_KEYS } from '../utils/cacheUtils';
 
 export const tmdbServices = {
-    // trending
     getTrendingAll: async (page = 1) => {
+        const cacheKey = `trending-all-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/trending/all/day?api_key=${API_KEY}&page=${page}`
             );
-            return response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching trending content:', error);
             throw error;
@@ -18,9 +25,20 @@ export const tmdbServices = {
 
     // best by category
     getBestByCategory: async (category, page = 1) => {
+        const cacheKey = `best-${category}-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
-            const response = await fetch(`${TMDB_BASE_URL}/${category}/top_rated?api_key=${API_KEY}&page=${page}`);
-            return response.json();
+            const response = await fetch(
+                `${TMDB_BASE_URL}/${category}/top_rated?api_key=${API_KEY}&page=${page}`
+            );
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching best by category:', error);
             throw error;
@@ -59,7 +77,8 @@ export const tmdbServices = {
     getSimilarContent: async (id, type) => {
         try {
             const response = await fetch(`${TMDB_BASE_URL}/${type}/${id}/similar?api_key=${API_KEY}`);
-            return response.json();
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error('Error fetching similar content:', error);
             throw error;

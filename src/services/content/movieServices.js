@@ -1,12 +1,22 @@
 import { TMDB_BASE_URL, API_KEY } from '../config';
+import { cacheManager, CACHE_KEYS } from '../../utils/cacheUtils';
 
 export const movieServices = {
     getPopularMovies: async (page = 1) => {
+        const cacheKey = `${CACHE_KEYS.POPULAR_MOVIES}-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/movie/popular?api_key=${API_KEY}&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching popular movies:', error);
             throw error;
@@ -14,11 +24,20 @@ export const movieServices = {
     },
     
     getTrendingMovies: async (page = 1) => {
+        const cacheKey = `${CACHE_KEYS.TRENDING_MOVIES}-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/trending/movie/day?api_key=${API_KEY}&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching trending movies:', error);
             throw error;
@@ -26,11 +45,20 @@ export const movieServices = {
     },
 
     getMovieDetails: async (movieId) => {
+        const cacheKey = CACHE_KEYS.MOVIE_DETAILS(movieId);
+        const cachedData = cacheManager.get(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error fetching movie details:', error);
             throw error;
@@ -38,13 +66,22 @@ export const movieServices = {
     },
 
     searchMovies: async (query, page = 1) => {
+        const cacheKey = `${CACHE_KEYS.SEARCH_RESULTS(query)}-${page}`;
+        const cachedData = cacheManager.get(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         try {
             const response = await fetch(
                 `${TMDB_BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
                     query
                 )}&page=${page}`
             );
-            return await response.json();
+            const data = await response.json();
+            cacheManager.set(cacheKey, data);
+            return data;
         } catch (error) {
             console.error('Error searching movies:', error);
             throw error;

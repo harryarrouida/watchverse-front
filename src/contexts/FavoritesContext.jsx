@@ -1,12 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getFavorites, addFavorite, removeFavorite, removeFavoriteByTmdbId } from '../services/tracker/trackerServices';
-import { useTrack } from './TrackContext';
 
 const FavoritesContext = createContext();
 
 export function FavoritesProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
-  // const { updateTrackLists, watching, watched, toWatch } = useTrack();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -14,10 +12,7 @@ export function FavoritesProvider({ children }) {
       setFavorites(favoritesData);
     };
     fetchFavorites();
-    // const handleUpdateTrackLists = async () => {
-    //   await updateTrackLists();
-    // };
-    // handleUpdateTrackLists();
+
   }, []);
 
   const updateFavorites = async () => {
@@ -28,8 +23,8 @@ export function FavoritesProvider({ children }) {
   const handleAddFavorite = async (favorite) => {
     if (!localStorage.getItem("token")) return null;
     
-    console.log("favorite from handleAddFavorite", favorite);
-    await addFavorite(favorite);
+    console.log("favorite from handleAddFavorite", { ...favorite, is_favorite: true });
+    await addFavorite({ ...favorite, is_favorite: true });
     await updateFavorites();
     
   };

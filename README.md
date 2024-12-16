@@ -2,6 +2,12 @@
 
 WatchVerse is a modern web application for tracking and discovering movies, TV shows, and anime. Built with React and powered by TMDB API, it offers a seamless experience for managing your watchlist and discovering new content.
 
+<div align="center" style="color: red;">
+  please note that the backend is not implemented in this repository, so you have to implement it yourself.
+  <br />
+  <br />
+</div>
+
 ## Showcase ✨
 
 **Home**
@@ -19,7 +25,7 @@ WatchVerse is a modern web application for tracking and discovering movies, TV s
 **Track**
 
 <div align="center">
-  <img src="./public/track.png" alt="WatchVerse" />
+  <img src="./public/tracking.png" alt="WatchVerse" />
 </div>
 
 ## Features ✨
